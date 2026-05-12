@@ -1,5 +1,5 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 $pageTitle = 'จัดการคำสั่งซื้อ';
 include '../config/db.php';
 include '../includes/functions.php';

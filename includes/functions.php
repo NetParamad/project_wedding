@@ -11,17 +11,40 @@ function getSetting($key) {
     return $row ? $row['value'] : '';
 }
 
-function getProducts($type = null) {
+function getProducts($type = null, $search = null, $sort = 'newest') {
     global $conn;
     $sql = "SELECT * FROM products WHERE status = 'active'";
     $params = [];
     $types = "";
+    
     if ($type) {
         $sql .= " AND type = ?";
         $params[] = $type;
         $types .= "s";
     }
-    $sql .= " ORDER BY id DESC";
+    
+    if ($search) {
+        $sql .= " AND (name LIKE ? OR description LIKE ?)";
+        $searchTerm = "%{$search}%";
+        $params[] = $searchTerm;
+        $params[] = $searchTerm;
+        $types .= "ss";
+    }
+    
+    switch ($sort) {
+        case 'price_asc':
+            $sql .= " ORDER BY price ASC";
+            break;
+        case 'price_desc':
+            $sql .= " ORDER BY price DESC";
+            break;
+        case 'name':
+            $sql .= " ORDER BY name ASC";
+            break;
+        default:
+            $sql .= " ORDER BY id DESC";
+    }
+    
     $stmt = $conn->prepare($sql);
     if ($params) {
         $stmt->bind_param($types, ...$params);
@@ -182,20 +205,71 @@ function loginUser($email, $password) {
     $user = $result ? $result->fetch_assoc() : null;
     
     if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['phone'] = $user['phone'] ?? '';
+        $_SESSION['address'] = $user['address'] ?? '';
         return $user;
     }
     return null;
 }
 
-function registerUser($name, $email, $password) {
+function registerUser($name, $email, $phone, $address, $password) {
     global $conn;
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, 'user', NOW())");
-    $stmt->bind_param("sss", $name, $email, $hash);
+    $stmt = $conn->prepare("INSERT INTO users (name, email, phone, address, password, role, created_at) VALUES (?, ?, ?, ?, ?, 'user', NOW())");
+    $stmt->bind_param("sssss", $name, $email, $phone, $address, $hash);
     if ($stmt->execute()) {
         return $conn->insert_id;
     }
     return false;
+}
+
+function getUserById($id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result ? $result->fetch_assoc() : null;
+}
+
+function getAllUsers() {
+    global $conn;
+    $result = $conn->query("SELECT * FROM users ORDER BY created_at DESC");
+    return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+}
+
+function updateUserProfile($user_id, $name, $phone, $address) {
+    global $conn;
+    $stmt = $conn->prepare("UPDATE users SET name = ?, phone = ?, address = ? WHERE id = ?");
+    $stmt->bind_param("sssi", $name, $phone, $address, $user_id);
+    return $stmt->execute();
+}
+
+function updateUserPassword($user_id, $old_password, $new_password = null) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result ? $result->fetch_assoc() : null;
+    
+    if (!$user) return false;
+    
+    if ($new_password === null) {
+        $hash = password_hash($old_password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt->bind_param("si", $hash, $user_id);
+        return $stmt->execute();
+    }
+    
+    if (!password_verify($old_password, $user['password'])) {
+        return 'wrong_password';
+    }
+    
+    $hash = password_hash($new_password, PASSWORD_DEFAULT);
+    $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt->bind_param("si", $hash, $user_id);
+    return $stmt->execute();
 }
 
 function getPrompaySettings() {
@@ -210,23 +284,6 @@ function getPrompaySettings() {
     return $settings;
 }
 
-function savePrompaySettings($number, $name, $image_path) {
-    global $conn;
-    $stmt = $conn->prepare("UPDATE settings SET value = ? WHERE setting_key = 'prompay_number'");
-    $stmt->bind_param("s", $number);
-    $stmt->execute();
-    
-    $stmt = $conn->prepare("UPDATE settings SET value = ? WHERE setting_key = 'prompay_name'");
-    $stmt->bind_param("s", $name);
-    $stmt->execute();
-    
-    if ($image_path) {
-        $stmt = $conn->prepare("UPDATE settings SET value = ? WHERE setting_key = 'prompay_image'");
-        $stmt->bind_param("s", $image_path);
-        $stmt->execute();
-    }
-}
-
 function csrfToken() {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -239,6 +296,9 @@ function verifyCsrfToken($token) {
 }
 
 function sanitize($data) {
+    if (is_null($data)) {
+        return '';
+    }
     if (is_array($data)) {
         return array_map('sanitize', $data);
     }
@@ -253,4 +313,127 @@ function validateImageUpload($file) {
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime = $finfo->file($file['tmp_name']);
     return in_array($mime, $allowed);
+}
+
+// ============================================
+// ฟังก์ชันใหม่ - ระบบ Booking
+// ============================================
+
+function saveBooking($product_id, $guest_name, $guest_phone, $start_date, $end_date, $total_price) {
+    global $conn;
+    $stmt = $conn->prepare("INSERT INTO bookings 
+        (product_id, guest_name, guest_phone, start_date, end_date, total_price, status, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())");
+    $stmt->bind_param("issssd", 
+        $product_id, 
+        $guest_name, 
+        $guest_phone, 
+        $start_date, 
+        $end_date, 
+        $total_price
+    );
+    
+    if ($stmt->execute()) {
+        return $conn->insert_id;
+    }
+    return false;
+}
+
+function getBookingById($booking_id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT b.*, p.name as product_name 
+        FROM bookings b 
+        LEFT JOIN products p ON b.product_id = p.id 
+        WHERE b.id = ?");
+    $stmt->bind_param("i", $booking_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result ? $result->fetch_assoc() : null;
+}
+
+// ============================================
+// ฟังก์ชันใหม่ - ระบบ Stock
+// ============================================
+
+function checkStock($product_id, $quantity = 1) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT stock FROM products WHERE id = ? AND status = 'active'");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row && $row['stock'] >= $quantity;
+}
+
+function getStock($product_id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT stock FROM products WHERE id = ?");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row ? max(0, $row['stock']) : 0;
+}
+
+function updateStock($product_id, $quantity, $type = 'decrease') {
+    global $conn;
+    
+    if ($type === 'decrease') {
+        $stmt = $conn->prepare("UPDATE products SET stock = GREATEST(0, stock - ?) WHERE id = ?");
+    } else {
+        $stmt = $conn->prepare("UPDATE products SET stock = stock + ? WHERE id = ?");
+    }
+    $stmt->bind_param("ii", $quantity, $product_id);
+    return $stmt->execute();
+}
+
+function validateCartItems() {
+    $invalid = [];
+    if (!empty($_SESSION['cart'])) {
+        foreach ($_SESSION['cart'] as $pid => $qty) {
+            if (!checkStock($pid, $qty)) {
+                $product = getProductById($pid);
+                if ($product) {
+                    $invalid[] = [
+                        'id' => $pid,
+                        'name' => $product['name'],
+                        'available' => getStock($pid)
+                    ];
+                }
+            }
+        }
+    }
+    return $invalid;
+}
+
+// ============================================
+// ฟังก์ชันใหม่ - จัดการรูปภาพ
+// ============================================
+
+function deleteProductImage($product_id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT image FROM products WHERE id = ?");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
+    if ($row && $row['image']) {
+        $file_path = __DIR__ . '/../assets/uploads/products/' . $row['image'];
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+        return true;
+    }
+    return false;
+}
+
+function getProductImage($product_id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT image FROM products WHERE id = ?");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row ? $row['image'] : null;
 }

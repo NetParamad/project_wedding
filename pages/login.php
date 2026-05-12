@@ -35,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $name = $_POST['name'];
         $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $address = $_POST['address'];
         $password = $_POST['password'];
         $confirm = $_POST['confirm_password'] ?? '';
         
@@ -45,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($check) {
                 $error = 'อีเมลนี้ถูกใช้ไปแล้ว';
             } else {
-                $id = registerUser($name, $email, $password);
+                $id = registerUser($name, $email, $phone, $address, $password);
                 if ($id) {
                     $_SESSION['user_id'] = $id;
                     $_SESSION['name'] = $name;
@@ -71,14 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
 </head>
-<body class="d-flex align-items-center" style="min-height: 100vh; background: linear-gradient(135deg, #fff 0%, #FFF0F5 100%);">
+<body class="d-flex align-items-center" style="min-height: 100vh; background: linear-gradient(135deg, var(--cream) 0%, var(--champagne) 100%);">
 
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card border-0 shadow-lg" style="border-radius: 20px;">
                 <div class="card-body p-4">
-                    <h3 class="text-center mb-4" style="color: var(--primary-dark);"><?php echo $pageTitle; ?></h3>
+                    <h3 class="text-center mb-4 font-elegant" style="color: var(--gold-dark);"><?php echo $pageTitle; ?></h3>
                     
                     <?php if ($error): ?>
                     <div class="alert alert-danger"><?php echo $error; ?></div>
@@ -105,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <label class="form-label">รหัสผ่าน</label>
                                     <input type="password" name="password" class="form-control" required>
                                 </div>
-                                <button type="submit" class="btn btn-pink w-100 py-3">เข้าสู่ระบบ</button>
+                                <button type="submit" class="btn btn-gold w-100 py-3">เข้าสู่ระบบ</button>
                             </form>
                         </div>
                         
@@ -121,6 +123,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="email" name="email" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">เบอร์โทรศัพท์</label>
+                                    <input type="tel" name="phone" class="form-control" pattern="0[0-9]{8,9}" placeholder="0x-xxxx-xxxx" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">ที่อยู่</label>
+                                    <textarea name="address" class="form-control" rows="2" placeholder="บ้านเลขที่/หมู่บ้าน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์" required></textarea>
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">รหัสผ่าน</label>
                                     <input type="password" name="password" class="form-control" required>
                                 </div>
@@ -128,13 +138,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <label class="form-label">ยืนยันรหัสผ่าน</label>
                                     <input type="password" name="confirm_password" class="form-control" required>
                                 </div>
-                                <button type="submit" class="btn btn-pink w-100 py-3">สมัครสมาชิก</button>
+                                <button type="submit" class="btn btn-gold w-100 py-3">สมัครสมาชิก</button>
                             </form>
                         </div>
                     </div>
                     
                     <div class="text-center mt-3">
-                        <a href="../index.php" style="color: var(--primary-dark);">← กลับหน้าหลัก</a>
+                        <a href="../index.php" style="color: var(--gold-dark);">← กลับหน้าหลัก</a>
                     </div>
                 </div>
             </div>

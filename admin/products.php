@@ -1,5 +1,5 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 $pageTitle = 'จัดการสินค้า';
 include '../config/db.php';
 include '../includes/functions.php';
@@ -39,6 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($message)) {
             if ($id > 0) {
                 if ($image) {
+                    $old_product = getProductById($id);
+                    if ($old_product && $old_product['image']) {
+                        deleteProductImage($old_product['image']);
+                    }
                     $stmt = $conn->prepare("UPDATE products SET name=?, description=?, price=?, type=?, image=?, stock=?, status=? WHERE id=?");
                     $stmt->bind_param("ssdsisi", $name, $description, $price, $type, $image, $stock, $status, $id);
                 } else {
@@ -99,7 +103,7 @@ $products = getProducts();
                 <div class="col-md-3">
                     <div class="mb-3">
                         <label class="form-label">ประเภท</label>
-                        <select name="type" class="form-select">
+                        <select name="type" class="form-select form-control">
                             <option value="rent" <?php echo ($product['type'] ?? '') === 'rent' ? 'selected' : ''; ?>>จอง (Rental)</option>
                             <option value="sale" <?php echo ($product['type'] ?? '') === 'sale' ? 'selected' : ''; ?>>ขาย (Sale)</option>
                         </select>
@@ -108,7 +112,7 @@ $products = getProducts();
                 <div class="col-md-3">
                     <div class="mb-3">
                         <label class="form-label">สถานะ</label>
-                        <select name="status" class="form-select">
+                        <select name="status" class="form-select form-control">
                             <option value="active" <?php echo ($product['status'] ?? '') === 'active' ? 'selected' : ''; ?>>เปิดใช้งาน</option>
                             <option value="inactive" <?php echo ($product['status'] ?? '') === 'inactive' ? 'selected' : ''; ?>>ปิดใช้งาน</option>
                         </select>

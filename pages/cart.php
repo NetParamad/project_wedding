@@ -15,6 +15,8 @@ $cart_total = 0;
 if (!empty($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $pid => $qty) {
         $product = getProductById($pid);
+        $stock = getStock($pid);
+        $available = checkStock($pid, $qty);
         if ($product) {
             $cart_items[] = [
                 'id' => $pid,
@@ -22,7 +24,9 @@ if (!empty($_SESSION['cart'])) {
                 'price' => $product['price'],
                 'quantity' => $qty,
                 'total' => $product['price'] * $qty,
-                'image' => $product['image']
+                'image' => $product['image'],
+                'stock' => $stock,
+                'available' => $available
             ];
             $cart_total += $product['price'] * $qty;
         }
@@ -40,7 +44,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['id'])
     $pid = (int)$_GET['id'];
     $qty = (int)$_GET['qty'];
     if ($qty > 0) {
-        $_SESSION['cart'][$pid] = $qty;
+        if (checkStock($pid, $qty)) {
+            $_SESSION['cart'][$pid] = $qty;
+        } else {
+            $_SESSION['error'] = 'สินค้าไม่เพียงพอ';
+        }
     } else {
         unset($_SESSION['cart'][$pid]);
     }
@@ -64,12 +72,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['id'])
 
 <main>
 <div class="container py-5">
-    <h2 class="fw-bold mb-4" style="color: var(--primary-dark);"><?php echo $pageTitle; ?></h2>
+    <h2 class="fw-bold mb-4 font-elegant" style="color: var(--gold-dark);"><?php echo $pageTitle; ?></h2>
+    
+    <?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+    <?php endif; ?>
     
     <?php if (empty($cart_items)): ?>
     <div class="text-center py-5">
         <p class="text-muted mb-4">ตะกร้าว่างเปล่า</p>
-        <a href="products.php" class="btn btn-pink">เลือกซื้อสินค้า</a>
+        <a href="products.php" class="btn btn-gold">เลือกซื้อสินค้า</a>
     </div>
     <?php else: ?>
     <div class="row">
@@ -83,6 +95,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['id'])
                         <div class="flex-grow-1">
                             <h5 class="fw-bold mb-1"><?php echo $item['name']; ?></h5>
                             <p class="mb-0" style="color: var(--primary-dark); font-weight: 700;">฿ <?php echo number_format($item['price']); ?></p>
+                            <?php if (!$item['available']): ?>
+                            <span class="badge bg-danger">สินค้าหมด</span>
+                            <?php elseif ($item['stock'] <= 5): ?>
+                            <span class="badge bg-warning text-dark">เหลือ <?php echo $item['stock']; ?> ชุด</span>
+                            <?php else: ?>
+                            <span class="badge bg-success">มีสินค้า</span>
+                            <?php endif; ?>
                         </div>
                         <div class="text-end">
                             <div class="d-flex align-items-center mb-2">
@@ -114,7 +133,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['id'])
                     <strong>รวมทั้งสิ้น</strong>
                     <strong style="color: var(--primary-dark); font-size: 1.2rem;">฿ <?php echo number_format($cart_total); ?></strong>
                 </div>
-                <a href="checkout.php" class="btn btn-pink w-100 py-3">ดำเนินการต่อ</a>
+                <a href="checkout.php" class="btn btn-gold w-100 py-3">ดำเนินการต่อ</a>
             </div>
         </div>
     </div>

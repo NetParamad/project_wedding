@@ -1,10 +1,55 @@
 // Main JavaScript for Wedding Shop
 
+// Page Transition on Load
+document.addEventListener('DOMContentLoaded', function() {
+    // Show overlay then fade out
+    const overlay = document.querySelector('.page-transition');
+    if (overlay) {
+        setTimeout(() => {
+            overlay.classList.remove('active');
+        }, 100);
+    }
+    
+    // Page Transition on Link Click
+    document.querySelectorAll('a[href]').forEach(link => {
+        const href = link.getAttribute('href');
+        
+        // Skip external links, anchors, and special links
+        if (href.startsWith('http') || href.startsWith('#') || 
+            href.startsWith('javascript') || href.includes('mailto:') ||
+            link.target === '_blank') {
+            return;
+        }
+        
+        link.addEventListener('click', function(e) {
+            const newOverlay = document.createElement('div');
+            newOverlay.className = 'page-transition active';
+            document.body.appendChild(newOverlay);
+        });
+    });
+});
+
+// Scroll Reveal Animation
+function initScrollReveal() {
+    const reveals = document.querySelectorAll('.reveal');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    reveals.forEach(el => observer.observe(el));
+}
+
 // Initialize flatpickr with Thai locale
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof flatpickr !== 'undefined') {
         window.flatpickrLocal = flatpickr.l10ns.th;
     }
+    initScrollReveal();
 });
 
 // SweetAlert2 helpers

@@ -17,23 +17,28 @@ INSERT INTO settings (setting_key, value) VALUES
 ('prompay_number', ''),
 ('prompay_name', ''),
 ('prompay_image', ''),
-('shop_name', 'ChinKorn Make Up'),
+('shop_name', ''),
 ('shop_phone', ''),
-('shop_line', '');
+('shop_email', ''),
+('shop_facebook', ''),
+('shop_line', ''),
+('shop_address', '');
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    address TEXT,
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin') DEFAULT 'user',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Admin user (password: admin123)
-INSERT INTO users (name, email, password, role) VALUES 
-('Admin', 'admin@wedding.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+INSERT INTO users (name, email, phone, address, password, role) VALUES 
+('Admin', 'admin@wedding.com', '089-999-9999', '123 หมู่บ้านช็อป ถ.สุขสันติ แขวงลาดพร้าว กรุงเทพ 10230', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
 
 -- Products table
 CREATE TABLE IF NOT EXISTS products (
@@ -48,12 +53,25 @@ CREATE TABLE IF NOT EXISTS products (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Sample Products
+INSERT INTO products (name, description, price, type, stock, status) VALUES 
+('ชุดแต่งงานมิวนิทัส', 'ชุดแต่งงานสไตล์มิวนิทัส ผ้าลูกไม้คุณภาพพรีเมียม', 15000.00, 'rent', 3, 'active'),
+('ชุดแต่งงานโบราณ', 'ชุดแต่งงานสไตล์โบราณ ผ้าไหมแท้', 25000.00, 'rent', 2, 'active'),
+('ชุดเจ้าสาวสวย', 'ชุดเจ้าสาวสไตล์เอสาราพ ซีเรียวตะสุข', 18000.00, 'rent', 4, 'active'),
+('ชุดราตรีสั้น', 'ชุดราตรีสั้น สำหรับงานเลี้ยง', 4500.00, 'sale', 10, 'active'),
+('ชุดราตรียาว', 'ชุดราตรียาว สำหรับงานเลี้ยง', 8000.00, 'sale', 5, 'active'),
+('ชุดสุภาพบุรุษ', 'ชุดสุภาพบุรุษ สำหรับงานเลี้ยง', 3500.00, 'sale', 8, 'active');
+
+
 -- Orders table
 CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     guest_name VARCHAR(255),
     guest_phone VARCHAR(50),
+    customer_name VARCHAR(100),
+    phone VARCHAR(20),
+    address TEXT,
     total_price DECIMAL(10,2) NOT NULL,
     status ENUM('pending', 'pending_payment', 'confirmed', 'cancelled', 'completed') DEFAULT 'pending',
     payment_slip VARCHAR(255),

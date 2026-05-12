@@ -1,5 +1,5 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 $pageTitle = 'ตั้งค่า Prompay';
 include '../config/db.php';
 include '../includes/functions.php';
@@ -18,16 +18,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || !verifyCsrfToken($_POST['csrf_token'])) {
         $message = 'Token ไม่ถูกต้อง';
     } else {
-        $prompay_number = trim($_POST['prompay_number']);
-        $prompay_name = trim($_POST['prompay_name']);
+        $prompay_number = $_POST['prompay_number'] ?? '';
+        $prompay_name = $_POST['prompay_name'] ?? '';
         
-        $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='prompay_number'");
-        $stmt->bind_param("s", $prompay_number);
-        $stmt->execute();
+        if ($prompay_number !== '') {
+            $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='prompay_number'");
+            $stmt->bind_param("s", $prompay_number);
+            $stmt->execute();
+        }
         
-        $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='prompay_name'");
-        $stmt->bind_param("s", $prompay_name);
-        $stmt->execute();
+        if ($prompay_name !== '') {
+            $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='prompay_name'");
+            $stmt->bind_param("s", $prompay_name);
+            $stmt->execute();
+        }
         
         if (!empty($_FILES['prompay_image']['name']) && is_uploaded_file($_FILES['prompay_image']['tmp_name'])) {
             if (!validateImageUpload($_FILES['prompay_image'])) {
@@ -35,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $ext = pathinfo($_FILES['prompay_image']['name'], PATHINFO_EXTENSION);
                 $image = 'prompay_' . time() . '.' . $ext;
-                move_uploaded_file($_FILES['prompay_image']['tmp_name'], '../assets/uploads/' . $image);
+                move_uploaded_file($_FILES['prompay_image']['tmp_name'], '../assets/uploads/prompay/' . $image);
                 $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='prompay_image'");
                 $stmt->bind_param("s", $image);
                 $stmt->execute();
@@ -49,21 +53,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($shop_action === 'shop_info') {
-    $shop_name = trim($_POST['shop_name']);
-    $shop_phone = trim($_POST['shop_phone']);
-    $shop_line = trim($_POST['shop_line']);
+    $shop_name = $_POST['shop_name'] ?? '';
+    $shop_phone = $_POST['shop_phone'] ?? '';
+    $shop_line = $_POST['shop_line'] ?? '';
     
-    $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='shop_name'");
-    $stmt->bind_param("s", $shop_name);
-    $stmt->execute();
+    if ($shop_name !== '') {
+        $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='shop_name'");
+        $stmt->bind_param("s", $shop_name);
+        $stmt->execute();
+    }
     
-    $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='shop_phone'");
-    $stmt->bind_param("s", $shop_phone);
-    $stmt->execute();
+    if ($shop_phone !== '') {
+        $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='shop_phone'");
+        $stmt->bind_param("s", $shop_phone);
+        $stmt->execute();
+    }
     
-    $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='shop_line'");
-    $stmt->bind_param("s", $shop_line);
-    $stmt->execute();
+    if ($shop_line !== '') {
+        $stmt = $conn->prepare("UPDATE settings SET value=? WHERE setting_key='shop_line'");
+        $stmt->bind_param("s", $shop_line);
+        $stmt->execute();
+    }
     
     $message = 'บันทึกข้อมูลร้านสำเร็จ';
 }

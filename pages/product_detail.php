@@ -25,7 +25,8 @@ $prompay_image = getSetting('prompay_image');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $product['name']; ?> - <?php echo $pageTitle; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
@@ -38,42 +39,44 @@ $prompay_image = getSetting('prompay_image');
     <main>
         <div class="container py-5">
             <nav aria-label="breadcrumb" class="mb-4">
-                <a href="products.php" class="text-decoration-none" style="color: var(--primary-dark);">← กลับไปสินค้าทั้งหมด</a>
+                <a href="products.php" class="text-decoration-none" style="color: var(--gold);">← กลับไปสินค้าทั้งหมด</a>
             </nav>
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <img src="<?php echo $product['image'] ? '../assets/uploads/products/' . $product['image'] : 'https://via.placeholder.com/600x600/F8C8DC/E8A0C0?text=' . urlencode($product['name']); ?>"
-                        class="img-fluid" style="border-radius: 20px; width: 100%;">
+                    <div class="image-zoom-container">
+                        <img src="<?php echo $product['image'] ? '../assets/uploads/products/' . $product['image'] : 'https://via.placeholder.com/600x600/D4AF37/F7E7CE?text=' . urlencode($product['name']); ?>"
+                            class="img-fluid" style="border-radius: 20px; width: 100%;">
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <span class="badge <?php echo $product['type'] === 'rent' ? 'badge-rent' : 'badge-sale'; ?> mb-2">
                         <?php echo $product['type'] === 'rent' ? 'จองชุดแต่งงาน' : 'ซื้อสินค้า'; ?>
                     </span>
-                    <h1 class="fw-bold mb-2" style="color: var(--primary-dark); font-size: 1.8rem;"><?php echo $product['name']; ?></h1>
+                    <h1 class="fw-bold mb-2 font-elegant" style="color: var(--gold-dark); font-size: 1.8rem;"><?php echo $product['name']; ?></h1>
 
-                    <h2 class="fw-bold mb-4" style="color: var(--primary-dark);">฿ <?php echo number_format($product['price']); ?></h2>
+                    <h2 class="fw-bold mb-4" style="color: var(--gold-dark);">฿ <?php echo number_format($product['price']); ?></h2>
 
                     <p class="text-muted mb-4"><?php echo nl2br($product['description'] ?? 'ไม่มีรายละเอียดสินค้า'); ?></p>
 
                     <?php if ($product['type'] === 'rent'): ?>
                         <!-- Booking Button -->
-                        <button class="btn btn-pink btn-lg w-100 mb-3" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                        <button class="btn btn-gold btn-lg w-100 mb-3" data-bs-toggle="modal" data-bs-target="#bookingModal">
                             จองชุดนี้
                         </button>
                         <small class="text-muted d-block text-center mb-4">* ไม่ต้องเข้าสู่ระบบ จองแล้วโอนเงินผ่าน Prompay</small>
                     <?php else: ?>
                         <!-- Sale Section -->
                         <div class="d-grid gap-2 mb-3">
-                            <button class="btn btn-pink btn-lg" data-bs-toggle="modal" data-bs-target="#saleModal">
+                            <button class="btn btn-gold btn-lg" data-bs-toggle="modal" data-bs-target="#saleModal">
                                 สั่งซื้อ (ไม่ต้อง Login)
                             </button>
                             <?php if (!$is_logged_in): ?>
-                                <a href="login.php?redirect=product_detail.php?id=<?php echo $id; ?>" class="btn btn-outline-pink btn-lg">
+                                <a href="login.php?redirect=product_detail.php?id=<?php echo $id; ?>" class="btn btn-outline-gold btn-lg">
                                     เข้าสู่ระบบเพื่อซื้อ
                                 </a>
                             <?php else: ?>
-                                <button class="btn btn-outline-pink btn-lg" onclick="addToCart(<?php echo $id; ?>)">
+                                <button class="btn btn-outline-gold btn-lg" onclick="addToCart(<?php echo $id; ?>)">
                                     เพิ่มในตะกร้า
                                 </button>
                             <?php endif; ?>
@@ -93,46 +96,60 @@ $prompay_image = getSetting('prompay_image');
         <div class="modal fade" id="bookingModal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content" style="border-radius: 20px;">
-                    <div class="modal-header" style="background: var(--primary-light); border-radius: 20px 20px 0 0;">
+                    <div class="modal-header" style="background: var(--champagne); border-radius: 20px 20px 0 0;">
                         <h5 class="modal-title fw-bold">จองชุด: <?php echo $product['name']; ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info mb-3">
-                            <small><strong>📅 เลือกวันที่:</strong> สามารถจองได้สูงสุด 3 ที่ ต่อ 1 วัน</small>
-                        </div>
+                    <form id="bookingForm" method="post" action="booking_api.php">
+                        <input type="hidden" name="product_id" value="<?php echo $id; ?>">
+                        <div class="modal-body">
+                            <div class="alert alert-info mb-3">
+                                <small><i class="bi bi-info-circle"></i> <strong>เลือกวันที่:</strong> สามารถจองได้สูงสุด 3 ที่ ต่อ 1 วัน</small>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">ชื่อ-นามสกุล *</label>
+                                    <input type="text" name="guest_name" class="form-control" placeholder="กรอกชื่อ-นามสกุล" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">เบอร์โทรศัพท์ *</label>
+                                    <input type="tel" name="guest_phone" class="form-control" placeholder="กรอกเบอร์โทร" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">เลือกวันที่ *</label>
+                                <input type="text" id="bookingDateRange" name="booking_dates" class="form-control" placeholder="เลือกวันที่เริ่ม - วันที่สิ้นสุด" required>
+                            </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">เลือกวันที่ *</label>
-                            <input type="text" id="bookingDateRange" class="form-control" placeholder="เลือกวันที่เริ่ม - วันที่สิ้นสุด">
-                        </div>
+                            <div id="bookingInfo" class="d-none">
+                                <div class="alert alert-success mb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span>ราคาจอง (<?php echo number_format($product['price']); ?> บาท x <span id="bookingDays">0</span> วัน):</span>
+                                        <strong id="bookingTotal">฿ 0</strong>
+                                    </div>
+                                </div>
 
-                        <div id="bookingInfo" class="d-none">
-                            <div class="alert alert-success mb-3">
-                                <div class="d-flex justify-content-between">
-                                    <span>ราคาจอง (<?php echo number_format($product['price']); ?> บาท x <span id="bookingDays">0</span> วัน):</span>
-                                    <strong id="bookingTotal">฿ 0</strong>
+                                <div class="text-center">
+                                    <strong class="text-success"><i class="bi bi-check-circle"></i> มีที่ว่าง</strong>
                                 </div>
                             </div>
 
-                            <div class="text-center">
-                                <strong class="text-success">✓ มีที่ว่าง</strong>
+                            <div id="bookingError" class="d-none">
+                                <div class="alert alert-danger">
+                                    <strong><i class="bi bi-x-circle"></i> ไม่มีที่ว่าง</strong>
+                                    <small id="errorDates" class="d-block mt-1"></small>
+                                </div>
                             </div>
                         </div>
-
-                        <div id="bookingError" class="d-none">
-                            <div class="alert alert-danger">
-                                <strong>✗ ไม่มีที่ว่าง</strong>
-                                <small id="errorDates" class="d-block mt-1"></small>
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                            <button type="submit" class="btn btn-gold" id="confirmBookingBtn" disabled>
+                                ยืนยันการจอง
+                            </button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                        <button type="button" class="btn btn-pink" id="confirmBookingBtn" disabled onclick="confirmBooking()">
-                            ยืนยันการจอง
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -170,8 +187,8 @@ $prompay_image = getSetting('prompay_image');
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                    <button type="button" class="btn btn-pink" onclick="sendToMessengerSale()">
-                        📱 ส่งไป Messenger
+                    <button type="button" class="btn btn-gold" onclick="sendToMessengerSale()">
+                        ส่งไป Messenger
                     </button>
                 </div>
             </div>
@@ -256,27 +273,51 @@ $prompay_image = getSetting('prompay_image');
             }
 
             function confirmBooking() {
-                if (!selectedStartDate || !selectedEndDate) return;
-
-                var startStr = flatpickr.formatDate(selectedStartDate, 'd/m/Y');
-                var endStr = flatpickr.formatDate(selectedEndDate, 'd/m/Y');
-                var totalPrice = (productPrice * totalDays).toLocaleString();
-
-                var ref = 'product_' + productId;
-                var message = encodeURIComponent('สวัสดีค่ะ ต้องการจองชุด ' + productName + ' วันที่ ' + startStr + ' - ' + endStr + ' ราคา ' + totalPrice + ' บาทค่ะ');
-                var url = 'https://m.me/ChinKornMakeUp?ref=' + ref + '&message=' + message;
-
-                window.open(url, '_blank');
-
-                bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '📨 กรุณาส่ง Slip',
-                    text: 'กรุณาส่งหลักฐานการโอน slip มาให้ทาง Messenger แล้วจะติดต่อกลับไปค่ะ',
-                    confirmButtonColor: '#E8A0C0'
+                // Submit form via AJAX
+                var form = document.getElementById('bookingForm');
+                var formData = new FormData(form);
+                
+                fetch('booking_api.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: '✅ จองสำเร็จ!',
+                            text: data.message + '\n\nกรุณาโอนเงินและส่งหลักฐานทาง Messenger',
+                            confirmButtonColor: '#A77E61'
+                        }).then(() => {
+                            window.open('https://m.me/ChinKornMakeUp', '_blank');
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '❌ เกิดข้อผิดพลาด',
+                            text: data.message,
+                            confirmButtonColor: '#A77E61'
+                        });
+                    }
+                })
+                .catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '❌ เกิดข้อผิดพลาด',
+                        text: 'กรุณาลองใหม่อีกครั้ง',
+                        confirmButtonColor: '#A77E61'
+                    });
                 });
             }
+            
+            // Handle form submit
+            document.getElementById('bookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                confirmBooking();
+            });
         <?php endif; ?>
 
         // ============================================

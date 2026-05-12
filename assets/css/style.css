@@ -1,22 +1,33 @@
 :root {
-    --primary: #F8C8DC;
-    --primary-light: #FAD4E4;
-    --primary-dark: #E8A0C0;
-    --primary-darker: #D488A8;
-    --cream: #FFF5E1;
-    --pink-light: #FFF0F5;
+    /* Luxury Wedding Theme - Warm Brown Accent */
+    --cream: #FFF9F0;
+    --cream-light: #FFFCF7;
+    --cream-dark: #F5E6D3;
+    --champagne: #F0E6D8;
+    --gold: #A77E61;
+    --gold-light: #994B16;
+    --gold-dark: #66361D;
     --white: #FFFFFF;
-    --text-dark: #333333;
-    --text-gray: #666666;
-    --text-light: #999999;
+    --text-dark: #2A2A2A;
+    --text-gray: #5A5A5A;
+    --text-light: #8A8A8A;
+    --primary: var(--gold);
+    --primary-light: var(--champagne);
+    --primary-dark: var(--gold);
+    --primary-darker: var(--gold-dark);
 }
 
 * {
     font-family: 'Prompt', sans-serif;
 }
 
+/* Elegant Titles */
+.font-elegant {
+    font-family: 'Playfair Display', serif;
+}
+
 body {
-    background: var(--white);
+    background: var(--cream-light);
     color: var(--text-dark);
     margin: 0;
 }
@@ -27,15 +38,16 @@ main {
 
 /* Navbar */
 .navbar {
-    background: var(--white) !important;
+    background: var(--cream) !important;
     padding: 12px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
 }
 
 .navbar-brand {
-    color: var(--primary-dark) !important;
+    color: var(--gold-dark) !important;
     font-size: 1.5rem;
     font-weight: 700;
+    font-family: 'Playfair Display', serif;
 }
 
 .nav-link {
@@ -45,38 +57,38 @@ main {
 }
 
 .nav-link:hover {
-    color: var(--primary-dark) !important;
+    color: var(--gold-dark) !important;
 }
 
-/* Buttons */
-.btn-pink {
-    background: var(--primary);
-    color: var(--text-dark);
+/* Buttons - Gold Accent */
+.btn-pink, .btn-gold {
+    background: var(--gold);
+    color: var(--white);
     border: none;
-    border-radius: 50px;
+    border-radius: 20px;
     font-weight: 600;
     transition: all 0.3s;
 }
 
-.btn-pink:hover {
-    background: var(--primary-dark);
+.btn-pink:hover, .btn-gold:hover {
+    background: var(--gold-dark);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(232, 160, 192, 0.4);
+    box-shadow: 0 5px 20px rgba(102, 54, 29, 0.4);
 }
 
-.btn-outline-pink {
+.btn-outline-pink, .btn-outline-gold {
     background: transparent;
-    color: var(--primary-dark);
-    border: 2px solid var(--primary-dark);
-    border-radius: 50px;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
     font-weight: 600;
     transition: all 0.3s;
 }
 
-.btn-outline-pink:hover {
-    background: var(--primary);
-    color: var(--text-dark);
+.btn-outline-pink:hover, .btn-outline-gold:hover {
+    background: var(--gold);
+    color: white;
 }
 
 .btn-lg {
@@ -86,26 +98,56 @@ main {
 
 /* Hero */
 .hero-section {
-    background: linear-gradient(135deg, var(--white) 0%, var(--pink-light) 100%);
+    background: linear-gradient(180deg, var(--cream-light) 0%, var(--cream) 50%, var(--champagne) 100%);
     padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(102,54,29,0.1) 0%, transparent 70%);
+    border-radius: 50%;
 }
 
 /* Cards */
 .card {
     border-radius: 16px;
     transition: all 0.3s;
+    background: var(--white);
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 40px rgba(102, 54, 29, 0.15);
+}
+
+/* Feature Cards */
+.feature-card {
+    border-radius: 20px;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(102, 54, 29, 0.2);
+    border: 2px solid var(--gold);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
 }
 
 /* Category Buttons */
 .category-btn {
     background: var(--white);
-    color: var(--primary-dark);
-    border: 2px solid var(--primary-light);
+    color: var(--gold);
+    border: 2px solid var(--champagne);
     padding: 12px 24px;
     border-radius: 50px;
     font-weight: 500;
@@ -115,39 +157,83 @@ main {
 }
 
 .category-btn:hover {
-    background: var(--primary);
-    border-color: var(--primary);
+    background: var(--champagne);
+    border-color: var(--champagne);
     color: var(--text-dark);
 }
 
 .category-btn.active {
-    background: var(--primary-dark);
-    border-color: var(--primary-dark);
+    background: var(--gold);
+    border-color: var(--gold);
     color: white;
 }
 
 /* Section Titles */
 .section-title, h2 {
-    color: var(--primary-dark);
+    color: var(--gold-dark);
     font-weight: 700;
+    font-family: 'Playfair Display', serif;
 }
 
 /* Form Controls */
 .form-control {
-    border: 2px solid var(--primary-light);
+    border: 2px solid var(--champagne);
     border-radius: 12px;
     padding: 12px 16px;
 }
 
 .form-control:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(248, 200, 220, 0.2);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
 /* Footer Enhanced */
 footer {
-    background: linear-gradient(180deg, var(--primary-light) 0%, #FAD4E4 100%);
+    background: linear-gradient(180deg, var(--cream) 0%, var(--champagne) 100%);
     padding: 50px 0 20px;
+}
+
+.footer-brand-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.footer-brand-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: var(--white);
+}
+
+.footer-brand h3 {
+    color: var(--gold-dark);
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 10px;
+}
+
+.footer-social a {
+    width: 45px;
+    height: 45px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-dark);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.footer-social a:hover {
+    transform: translateY(-3px);
+    background: var(--gold);
+    color: white;
 }
 
 .footer-brand {
@@ -282,18 +368,33 @@ footer {
 
 /* Badges */
 .badge-rent {
-    background: var(--primary);
-    color: var(--text-dark);
+    background: var(--champagne);
+    color: var(--black);
 }
 
 .badge-sale {
-    background: var(--primary-dark);
+    background: var(--gold);
     color: white;
 }
 
 .product-price {
-    color: var(--primary-dark);
+    color: var(--gold-dark);
     font-weight: 700;
+}
+
+/* Image Zoom Container */
+.image-zoom-container {
+    overflow: hidden;
+    border-radius: 20px;
+    cursor: zoom-in;
+}
+
+.image-zoom-container img {
+    transition: transform 0.3s ease;
+}
+
+.image-zoom-container:hover img {
+    transform: scale(1.1);
 }
 
 /* Alerts */
@@ -314,7 +415,7 @@ footer {
 }
 
 .dropdown-item:hover {
-    background: var(--primary-light);
+    background: var(--champagne);
 }
 
 /* List Groups */
@@ -325,8 +426,8 @@ footer {
 
 /* Nav Pills */
 .nav-pills .nav-link.active {
-    background: var(--primary);
-    color: var(--text-dark);
+    background: var(--gold);
+    color: white;
 }
 
 /* Modal */
@@ -374,9 +475,9 @@ footer {
 
 .btn-gold {
     background: var(--primary);
-    color: var(--text-dark);
+    color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 20px;
     font-weight: 600;
     padding: 10px 20px;
     transition: all 0.3s;

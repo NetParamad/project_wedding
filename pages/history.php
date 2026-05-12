@@ -27,12 +27,12 @@ $orders = getOrders($_SESSION['user_id']);
 
 <main>
 <div class="container py-5">
-    <h2 class="fw-bold mb-4" style="color: var(--primary-dark);"><?php echo $pageTitle; ?></h2>
+    <h2 class="fw-bold mb-4 font-elegant" style="color: var(--gold-dark);"><?php echo $pageTitle; ?></h2>
     
     <?php if (empty($orders)): ?>
     <div class="text-center py-5">
         <p class="text-muted mb-4">ยังไม่มีประวัติการสั่งซื้อ</p>
-        <a href="products.php" class="btn btn-pink">เลือกซื้อสินค้า</a>
+        <a href="products.php" class="btn btn-gold">เลือกซื้อสินค้า</a>
     </div>
     <?php else: ?>
     <div class="row g-4">
