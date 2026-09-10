@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Category, Product, ProductImage, Profile, StoreSettings, Appointment, AppointmentService, Rental, ProductDateLock } from '@/lib/db.types'
+import { rentalDayCount } from '@/lib/date-utils'
 
 // ─── Profiles ───
 
@@ -14,17 +15,23 @@ export async function getProfile(client: SupabaseClient) {
     .single()
 
   if (!data && error && error.code === 'PGRST116') {
-    await client.from('profiles').insert({
-      id: user.id,
-      display_name: user.email,
-      role: 'user'
-    })
+    // Row missing (the handle_new_user trigger normally creates it). Upsert so a
+    // race with the trigger doesn't turn into a duplicate-key error, then re-read.
+    const { error: insertError } = await client
+      .from('profiles')
+      .upsert(
+        { id: user.id, display_name: user.email, role: 'user' },
+        { onConflict: 'id', ignoreDuplicates: true },
+      )
+    if (insertError) {
+      console.error('getProfile: failed to create profile row', insertError)
+    }
     const { data: newData } = await client
       .from('profiles')
       .select('*')
       .eq('id', user.id)
-    .maybeSingle()
-    if (newData) return newData as Profile | null
+      .maybeSingle()
+    return (newData ?? null) as Profile | null
   }
 
   return data as Profile | null
@@ -162,7 +169,6 @@ export async function createProduct(
     slug: string
     description?: string
     price?: number
-    stock_qty?: number
     is_active?: boolean
   }
 ) {
@@ -174,7 +180,6 @@ export async function createProduct(
       slug: input.slug,
       description: input.description ?? null,
       price: input.price ?? 0,
-      stock_qty: input.stock_qty ?? 0,
       is_active: input.is_active ?? true,
     })
     .select()
@@ -193,7 +198,6 @@ export async function updateProduct(
     slug?: string
     description?: string
     price?: number
-    stock_qty?: number
     is_active?: boolean
   }
 ) {
@@ -467,9 +471,10 @@ export async function getActiveProducts(
   }
 
   if (options?.search) {
-    query = query.or(
-      `name.ilike.%${options.search}%`
-    )
+    // Escape PostgREST reserved characters so a term with a comma/paren/quote
+    // can't alter the filter expression, then match the name column directly.
+    const term = options.search.replace(/[,()"\\]/g, ' ').trim()
+    if (term) query = query.ilike('name', `%${term}%`)
   }
 
   const { data, count } = await query.range(from, to)
@@ -554,10 +559,23 @@ export async function updateStoreSettings(
 
 // ─── Dashboard ───
 
+// Store timezone — every "which day did this happen" bucket below is computed
+// in this zone so they agree with each other regardless of server TZ.
+const STORE_TZ = 'Asia/Bangkok'
+
+function storeDay(ts: string | Date): string {
+  // en-CA formats as YYYY-MM-DD
+  return new Date(ts).toLocaleDateString('en-CA', { timeZone: STORE_TZ })
+}
+
+// Rental days billed = same inclusive count the availability lock uses.
 function calcRentalDays(r: { rental_start_date: string; rental_end_date: string }): number {
-  const s = new Date(r.rental_start_date + 'T00:00:00')
-  const e = new Date(r.rental_end_date + 'T00:00:00')
-  return Math.ceil((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24))
+  return rentalDayCount(r.rental_start_date, r.rental_end_date)
+}
+
+// A rental only counts as revenue once it is no longer pending/cancelled.
+function countsAsRevenue(status: string): boolean {
+  return status !== 'cancelled' && status !== 'pending'
 }
 
 function rentalRevenue(r: { rental_price: number | string; rental_start_date: string; rental_end_date: string }): number {
@@ -570,12 +588,14 @@ export async function getDashboardStats(client: SupabaseClient) {
     .select('id, rental_price, deposit_amount, status, created_at, rental_start_date, rental_end_date, product_id, product:products(name)')
     .order('created_at', { ascending: false })
 
+  const todayStore = storeDay(new Date())
+
   const totalRentals = rentals?.length ?? 0
   const totalRevenue = rentals
-    ?.filter((r) => r.status !== 'cancelled')
+    ?.filter((r) => countsAsRevenue(r.status))
     .reduce((sum, r) => sum + rentalRevenue(r), 0) ?? 0
   const todayRentals = rentals
-    ?.filter((r) => new Date(r.created_at).toDateString() === new Date().toDateString())
+    ?.filter((r) => storeDay(r.created_at) === todayStore)
     .length ?? 0
   const pendingRentals = rentals
     ?.filter((r) => r.status === 'pending')
@@ -589,19 +609,19 @@ export async function getDashboardStats(client: SupabaseClient) {
   const last30 = Array.from({ length: 30 }, (_, i) => {
     const d = new Date()
     d.setDate(d.getDate() - i)
-    return d.toISOString().split('T')[0]
+    return storeDay(d)
   }).reverse()
 
   const revenueByDay: { date: string; revenue: number }[] = last30.map((date) => ({
     date,
     revenue: rentals
-      ?.filter((r) => r.created_at?.startsWith(date) && r.status !== 'cancelled')
+      ?.filter((r) => storeDay(r.created_at) === date && countsAsRevenue(r.status))
       .reduce((sum, r) => sum + rentalRevenue(r), 0) ?? 0,
   }))
 
   const productRentalCounts: Record<string, { count: number; name: string; revenue: number }> = {}
   rentals?.forEach((r) => {
-    if (r.status === 'cancelled') return
+    if (!countsAsRevenue(r.status)) return
     const p = r.product as { name?: string } | null
     const name = p?.name ?? `#${r.product_id}`
     if (!productRentalCounts[name]) {
@@ -627,7 +647,7 @@ export async function getDashboardStats(client: SupabaseClient) {
     .select('id, created_at, status')
   const totalAppointments = allAppointments?.length ?? 0
   const todayAppointments = allAppointments
-    ?.filter((a) => new Date(a.created_at).toDateString() === new Date().toDateString())
+    ?.filter((a) => storeDay(a.created_at) === todayStore)
     .length ?? 0
   const appointmentsByStatus: Record<string, number> = {}
   allAppointments?.forEach((a) => {
@@ -787,13 +807,15 @@ export async function isProductAvailable(
   client: SupabaseClient,
   productId: number,
   startDate: string,
-  endDate?: string
+  endDate?: string,
+  blockAppointments: boolean = true
 ) {
   const end = endDate ?? startDate
   const { data } = await client.rpc('check_product_available', {
     p_product_id: productId,
     p_start_date: startDate,
     p_end_date: end,
+    p_block_appointments: blockAppointments,
   })
   return data ?? false
 }
@@ -982,7 +1004,13 @@ export async function updateRental(
     .update(updates)
     .eq('id', id)
 
-  if (error) throw error
+  if (error) {
+    // exclusion constraint: the new dates overlap another rental of this product
+    if ((error as { code?: string }).code === '23P01') {
+      throw new Error('ช่วงวันที่นี้ทับกับรายการเช่าอื่นของชุดนี้ กรุณาเลือกวันอื่น')
+    }
+    throw error
+  }
 }
 
 export async function getRentalsByProductInRange(
@@ -1055,11 +1083,18 @@ export async function updateAppointmentCustomer(
   if (input.product_id !== undefined) updates.product_id = input.product_id
   if (input.notes !== undefined) updates.notes = input.notes
 
-  const { error } = await client
+  // Customers may only edit an appointment while it is still pending — once the
+  // shop has confirmed (or it is completed/cancelled) it is locked.
+  const { data, error } = await client
     .from('appointments')
     .update(updates)
     .eq('id', id)
     .eq('user_id', userId)
+    .eq('status', 'pending')
+    .select('id')
 
   if (error) throw error
+  if (!data || data.length === 0) {
+    throw new Error('แก้ไขไม่ได้ เนื่องจากการนัดนี้ถูกยืนยันหรือปิดไปแล้ว')
+  }
 }

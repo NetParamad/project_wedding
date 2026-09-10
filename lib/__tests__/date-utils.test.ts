@@ -6,6 +6,7 @@ import {
   isDateInRange,
   datesOverlap,
   formatDateThai,
+  rentalDayCount,
 } from '@/lib/date-utils'
 
 describe('toISO', () => {
@@ -98,6 +99,29 @@ describe('datesOverlap', () => {
 
   it('returns false when one range fully contains the other in reverse order', () => {
     expect(datesOverlap('2024-06-16', '2024-06-20', '2024-06-10', '2024-06-15')).toBe(false)
+  })
+})
+
+describe('rentalDayCount', () => {
+  it('counts a same-day rental as 1 day', () => {
+    expect(rentalDayCount('2024-06-10', '2024-06-10')).toBe(1)
+  })
+
+  it('counts inclusively (3-5 = 3 days)', () => {
+    expect(rentalDayCount('2024-01-03', '2024-01-05')).toBe(3)
+  })
+
+  it('counts across a month boundary', () => {
+    expect(rentalDayCount('2024-06-30', '2024-07-02')).toBe(3)
+  })
+
+  it('returns 0 when end is before start', () => {
+    expect(rentalDayCount('2024-06-10', '2024-06-09')).toBe(0)
+  })
+
+  it('returns 0 when a date is missing', () => {
+    expect(rentalDayCount('', '2024-06-10')).toBe(0)
+    expect(rentalDayCount('2024-06-10', '')).toBe(0)
   })
 })
 

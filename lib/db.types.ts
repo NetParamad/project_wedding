@@ -27,7 +27,6 @@ export interface Product {
   slug: string
   description: string | null
   price: number
-  stock_qty: number
   is_active: boolean
   rental_price: number
   rental_deposit: number

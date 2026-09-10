@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { getCategories, getProducts, getDashboardStats } from '@/lib/supabase/queries'
+import { rentalDayCount } from '@/lib/date-utils'
 import Link from 'next/link'
-import { Package, Tags, ShoppingCart, CalendarRange, DollarSign, TrendingUp, Clock, ShoppingBagIcon } from 'lucide-react'
+import { Package, Tags, CalendarRange, DollarSign, TrendingUp, Clock, ShoppingBagIcon } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -34,7 +35,6 @@ export default async function AdminDashboard() {
     getDashboardStats(supabase),
   ])
 
-  const totalStock = products.reduce((sum, p) => sum + p.stock_qty, 0)
   const inactiveProducts = products.filter((p) => !p.is_active).length
 
   const statusCards = [
@@ -150,7 +150,7 @@ export default async function AdminDashboard() {
                         'bg-gray-100 text-gray-800'} border-transparent text-xs`}>
                         {rentalStatusLabels[rental.status] || rental.status}
                       </Badge>
-                      <span className="text-muted-foreground">฿{Number(rental.rental_price).toLocaleString()}</span>
+                      <span className="text-muted-foreground">฿{(Number(rental.rental_price) * rentalDayCount(rental.rental_start_date, rental.rental_end_date)).toLocaleString()}</span>
                     </div>
                   </div>
                 ))}
@@ -165,7 +165,7 @@ export default async function AdminDashboard() {
         <BookingStatusChart data={stats.appointmentsByStatus} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">หมวดหมู่</CardTitle>
@@ -178,17 +178,7 @@ export default async function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">สต็อกสินค้า</CardTitle>
-            <ShoppingCart size={18} className="text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalStock}</div>
-            <p className="text-xs text-muted-foreground mt-1">สินค้าที่มี</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">การนัดหมาย</CardTitle>
+            <CardTitle className="text-sm font-medium">นัดลองชุด</CardTitle>
             <CalendarRange size={18} className="text-muted-foreground" />
           </CardHeader>
           <CardContent>

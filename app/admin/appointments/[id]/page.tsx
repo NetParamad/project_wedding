@@ -109,8 +109,8 @@ export default function AdminAppointmentDetailPage() {
         await createNotification(supabase, {
           user_id: appointment.user_id,
           type: 'appointment_update',
-          title: 'สถานะการนัดหมายเปลี่ยนแปลง',
-          message: `การนัดหมาย #${appointment.id} เป็น "${statusLabel(newStatus)}" แล้ว`,
+          title: 'สถานะนัดลองชุดเปลี่ยนแปลง',
+          message: `นัดลองชุด #${appointment.id} เปลี่ยนเป็น "${statusLabel(newStatus)}" แล้ว`,
           link: `/appointments/${appointment.id}`,
         })
       } catch {} // best-effort
@@ -167,7 +167,7 @@ export default function AdminAppointmentDetailPage() {
       const updated = await getAppointment(supabase, appointment.id)
       if (updated) setAppointment(updated)
       setEditOpen(false)
-      toast.success('อัปเดตการนัดหมายแล้ว')
+      toast.success('อัปเดตนัดลองชุดแล้ว')
       router.refresh()
     } catch (err) {
       console.error(err)
@@ -190,7 +190,7 @@ export default function AdminAppointmentDetailPage() {
         .eq('id', appointment.id)
       setAppointment({ ...appointment, status: 'cancelled', admin_notes: cancelReason })
       setCancelOpen(false)
-      toast.success('ยกเลิกนัดหมายแล้ว')
+      toast.success('ยกเลิกนัดลองชุดแล้ว')
       router.refresh()
     } catch (err) {
       console.error(err)
@@ -212,9 +212,11 @@ export default function AdminAppointmentDetailPage() {
       const { createRental, isProductAvailable } = await import('@/lib/supabase/queries')
       const supabase = createClient()
 
-      const available = await isProductAvailable(supabase, appointment.product.id, rentalStart, rentalEnd)
+      // Don't count appointments as conflicts — this rental is being created
+      // FROM an appointment, so the fitting date normally overlaps on purpose.
+      const available = await isProductAvailable(supabase, appointment.product.id, rentalStart, rentalEnd, false)
       if (!available) {
-        toast.error('ไม่สามารถเช่าได้ในช่วงวันที่เลือก เนื่องจากชุดนี้ถูกล็อควันจอง')
+        toast.error('ไม่สามารถเช่าได้ในช่วงวันที่เลือก เนื่องจากชุดนี้ถูกล็อกหรือมีคนเช่าอยู่')
         setUpdating(false)
         return
       }
@@ -272,6 +274,7 @@ export default function AdminAppointmentDetailPage() {
 
   async function handleNoShow() {
     if (!appointment) return
+    if (!window.confirm('บันทึกว่าลูกค้าไม่มาลองชุด และยกเลิกนัดนี้?')) return
     setUpdating(true)
     try {
       const { updateAppointmentStatus } = await import('@/lib/supabase/queries')
@@ -316,7 +319,7 @@ export default function AdminAppointmentDetailPage() {
           <Link href="/admin/appointments"><ArrowLeft size={18} /></Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">การนัดหมาย #{appointment.id}</h1>
+          <h1 className="text-2xl font-bold">นัดลองชุด #{appointment.id}</h1>
           <p className="text-sm text-muted-foreground">{serviceName}</p>
         </div>
       </div>
@@ -324,7 +327,7 @@ export default function AdminAppointmentDetailPage() {
       {isCancelled ? (
         <Card className="bg-red-50 border-red-200 text-center text-red-700 font-medium">
           <CardContent className="p-4">
-            การนัดหมายนี้ถูกยกเลิกแล้ว
+            นัดลองชุดนี้ถูกยกเลิกแล้ว
           </CardContent>
         </Card>
       ) : (
@@ -373,7 +376,7 @@ export default function AdminAppointmentDetailPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>แก้ไขการนัดหมาย</DialogTitle>
+                <DialogTitle>แก้ไขนัดลองชุด</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -426,7 +429,7 @@ export default function AdminAppointmentDetailPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>ยกเลิกนัดหมาย</DialogTitle>
+                <DialogTitle>ยกเลิกนัดลองชุด</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -539,7 +542,7 @@ export default function AdminAppointmentDetailPage() {
 
       <Card>
         <CardContent className="p-4 space-y-3 text-sm">
-        <h2 className="font-semibold">รายละเอียดการนัดหมาย</h2>
+        <h2 className="font-semibold">รายละเอียดนัดลองชุด</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <span className="text-muted-foreground">บริการ</span>

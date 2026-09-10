@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getAllActiveProducts, getProductUnavailableDates } from '@/lib/supabase/queries'
 import { createRentalAction } from '@/app/actions/rentals'
+import { rentalDayCount } from '@/lib/date-utils'
 import { Loader2, ArrowLeft, ClipboardList, Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -119,7 +120,7 @@ function NewRentalContent() {
       if (!rentalStart) newErrors.rentalStart = 'กรุณาเลือกวันที่เริ่มเช่า'
       if (!rentalEnd) newErrors.rentalEnd = 'กรุณาเลือกวันที่สิ้นสุดเช่า'
       if (!phone || !/^\d{10}$/.test(phone)) newErrors.phone = 'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก'
-      if (rentalStart && rentalEnd && new Date(rentalEnd) <= new Date(rentalStart)) newErrors.rentalEnd = 'วันที่สิ้นสุดต้องมากกว่าวันที่เริ่มต้น'
+      if (rentalStart && rentalEnd && new Date(rentalEnd) < new Date(rentalStart)) newErrors.rentalEnd = 'วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่มต้น'
       if (deliveryMethod === 'delivery') {
         if (!deliveryName.trim()) newErrors.deliveryName = 'กรุณากรอกชื่อผู้รับ'
         if (!deliveryAddress.trim()) newErrors.deliveryAddress = 'กรุณากรอกที่อยู่จัดส่ง'
@@ -165,9 +166,7 @@ function NewRentalContent() {
     )
   }
 
-  const days = rentalStart && rentalEnd
-    ? Math.max(0, Math.ceil((new Date(rentalEnd).getTime() - new Date(rentalStart).getTime()) / (1000 * 60 * 60 * 24)))
-    : 0
+  const days = rentalDayCount(rentalStart, rentalEnd)
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">

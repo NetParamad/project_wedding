@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getAdminRental, updateRentalStatus, updateRentalReturn, updateRental } from '@/lib/supabase/queries'
+import { rentalDayCount } from '@/lib/date-utils'
 import { Loader2, ArrowLeft, ShoppingBagIcon, ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -143,6 +144,7 @@ export default function AdminRentalDetailPage() {
 
   async function handleCancelRental() {
     if (!rental) return
+    if (!window.confirm(`ยกเลิกรายการเช่า #${rental.id}?`)) return
     setUpdating(true)
     try {
       const supabase = createClient()
@@ -172,6 +174,7 @@ export default function AdminRentalDetailPage() {
   const isReturned = rental.status === 'returned'
   const isCancelled = rental.status === 'cancelled'
   const isActive = rental.status === 'active'
+  const rentalDays = rentalDayCount(rental.rental_start_date, rental.rental_end_date)
 
   return (
     <div className="space-y-8 max-w-3xl">
@@ -234,7 +237,9 @@ export default function AdminRentalDetailPage() {
             </div>
             <div>
               <span className="text-muted-foreground">ราคาเช่า</span>
-              <p className="font-medium">฿{Number(rental.rental_price).toLocaleString()}</p>
+              <p className="font-medium">
+                ฿{Number(rental.rental_price).toLocaleString()}/วัน &times; {rentalDays} วัน = ฿{(Number(rental.rental_price) * rentalDays).toLocaleString()}
+              </p>
             </div>
             <div>
               <span className="text-muted-foreground">ค่าประกัน</span>
@@ -312,7 +317,7 @@ export default function AdminRentalDetailPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>ราคาเช่า (บาท)</Label>
+                <Label>ราคาเช่า (บาท/วัน)</Label>
                 <Input type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} />
               </div>
               <div className="space-y-2">

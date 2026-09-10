@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getAllRentals } from '@/lib/supabase/queries'
+import { rentalDayCount } from '@/lib/date-utils'
 import { Loader2, ChevronRight, ShoppingBagIcon, ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -122,7 +123,7 @@ export default function AdminRentalsPage() {
                   <TableCell className="px-4 py-3">
                     {new Date(rental.rental_end_date + 'T00:00:00').toLocaleDateString('th-TH')}
                   </TableCell>
-                  <TableCell className="px-4 py-3">฿{Number(rental.rental_price).toLocaleString()}</TableCell>
+                  <TableCell className="px-4 py-3">฿{(Number(rental.rental_price) * rentalDayCount(rental.rental_start_date, rental.rental_end_date)).toLocaleString()}</TableCell>
                   <TableCell className="px-4 py-3">฿{Number(rental.deposit_amount).toLocaleString()}</TableCell>
                   <TableCell className="px-4 py-3">
                     <Badge className={`${statusColor(rental.status)} border-transparent`}>

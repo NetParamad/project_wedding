@@ -160,14 +160,12 @@ function BookAppointmentContent() {
     setSubmitting(true)
 
     try {
-      const endTime = addMinutes(selectedTime, selectedService!.duration_minutes)
-
+      // end_time is derived server-side from the service duration.
       await createAppointmentAction({
         service_id: selectedService!.id,
         product_id: selectedProductId && selectedProductId !== 'none' ? parseInt(selectedProductId) : null,
         appointment_date: selectedDate,
         time_slot: selectedTime,
-        end_time: endTime,
         phone,
         notes: notes || undefined,
       })
@@ -180,7 +178,7 @@ function BookAppointmentContent() {
         router.push('/auth/login')
       } else {
         console.error(err)
-        alert(msg || 'ไม่สามารถจองนัดหมายได้')
+        alert(msg || 'นัดลองชุดไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
       }
     } finally {
       setSubmitting(false)
@@ -206,14 +204,14 @@ function BookAppointmentContent() {
         <Button asChild variant="ghost" size="icon">
           <Link href="/appointments"><ArrowLeft size={18} /></Link>
         </Button>
-          <h1 className="text-2xl font-bold">จองนัดหมาย (ลองชุด)</h1>
+          <h1 className="text-2xl font-bold">นัดลองชุด</h1>
       </div>
 
       <Card className="border-blue-200 bg-blue-50">
         <CardContent className="p-4 text-sm text-blue-800 space-y-1">
-          <p>• การจอง 1 ชุด ราคา 500 บาท ต่อการจอง 1 ครั้ง</p>
-          <p>• สามารถเลือกสินค้าที่ต้องการลองชุดได้ (ไม่บังคับ)</p>
-          <p>• ยกเลิกการจองได้ก่อนถึงวันที่นัดหมาย</p>
+          <p>• ค่าบริการ 500 บาท ต่อการนัด 1 ครั้ง</p>
+          <p>• เลือกชุดที่อยากลองไว้ล่วงหน้าได้ (จะเลือกหรือไม่ก็ได้)</p>
+          <p>• ยกเลิกได้ก่อนถึงวันนัด</p>
         </CardContent>
       </Card>
 
@@ -224,7 +222,7 @@ function BookAppointmentContent() {
             <Label>เลือกบริการ <span className="text-destructive">*</span></Label>
             <Select value={selectedServiceId} onValueChange={(v) => { setSelectedServiceId(v); setErrors((prev) => ({ ...prev, service: '' })) }}>
               <SelectTrigger aria-invalid={!!errors.service}>
-                <SelectValue placeholder="เลือกประเภทบริการ" />
+                <SelectValue placeholder="เลือกบริการที่ต้องการ" />
               </SelectTrigger>
               <SelectContent>
                 {services.map(s => (
@@ -239,10 +237,10 @@ function BookAppointmentContent() {
 
           {selectedService?.type === 'try_on' && (
             <div className="space-y-2">
-              <Label>เลือกสินค้า (ไม่บังคับ)</Label>
+              <Label>เลือกชุดที่อยากลอง (จะเลือกหรือไม่ก็ได้)</Label>
               <Select value={selectedProductId} onValueChange={setSelectedProductId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="เลือกสินค้า" />
+                  <SelectValue placeholder="เลือกชุด" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">—</SelectItem>
@@ -293,7 +291,7 @@ function BookAppointmentContent() {
             <div className="space-y-2">
               <Label>เลือกเวลา <span className="text-destructive">*</span></Label>
               {timeSlots.length === 0 ? (
-                <p className="text-sm text-muted-foreground">ไม่มีช่วงเวลาว่างในวันที่เลือก</p>
+                <p className="text-sm text-muted-foreground">วันที่เลือกไม่มีเวลาว่าง ลองเลือกวันอื่น</p>
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {timeSlots.map(slot => {
@@ -326,9 +324,9 @@ function BookAppointmentContent() {
 
         <Card>
           <CardContent className="p-4 space-y-4">
-          <h2 className="font-semibold">ข้อมูลเพิ่มเติม</h2>
+          <h2 className="font-semibold">ข้อมูลติดต่อ</h2>
           <div className="space-y-2">
-            <Label htmlFor="phone">เบอร์โทร <span className="text-destructive">*</span></Label>
+            <Label htmlFor="phone">เบอร์โทรศัพท์ <span className="text-destructive">*</span></Label>
             <Input
               id="phone"
               type="tel"
@@ -342,19 +340,19 @@ function BookAppointmentContent() {
             {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="notes">หมายเหตุ</Label>
+            <Label htmlFor="notes">หมายเหตุถึงร้าน (ถ้ามี)</Label>
             <Textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="รายละเอียดเพิ่มเติม..."
+              placeholder="เช่น สอบถามไซซ์ หรือแจ้งความต้องการพิเศษ"
               rows={3}
             />
           </div>
         </CardContent></Card>
 
         <Button type="submit" disabled={submitting} className="w-full">
-          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'ยืนยันการจอง'}
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'ยืนยันการนัด'}
         </Button>
       </form>
     </div>

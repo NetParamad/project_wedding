@@ -4,6 +4,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getRental } from '@/lib/supabase/queries'
+import { rentalDayCount } from '@/lib/date-utils'
 import { Loader2, ArrowLeft, CheckCircle, Circle, AlertTriangle, ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -95,6 +96,7 @@ function RentalDetailContent() {
 
   const isCancelled = rental.status === 'cancelled'
   const currentStep = statusSteps.indexOf(rental.status)
+  const rentalDays = rentalDayCount(rental.rental_start_date, rental.rental_end_date)
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-8">
@@ -192,7 +194,7 @@ function RentalDetailContent() {
           </div>
           <div>
             <span className="text-muted-foreground">จำนวนวันที่เช่า</span>
-            <p className="font-medium">{(() => { const s = new Date(rental.rental_start_date + 'T00:00:00'); const e = new Date(rental.rental_end_date + 'T00:00:00'); return Math.ceil((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) })()}</p>
+            <p className="font-medium">{rentalDays} วัน</p>
           </div>
           <div>
             <span className="text-muted-foreground">ค่าประกัน</span>
@@ -200,7 +202,7 @@ function RentalDetailContent() {
           </div>
           <div>
             <span className="text-muted-foreground">รวมทั้งสิ้น</span>
-            <p className="font-medium">฿{(Number(rental.rental_price) * (() => { const s = new Date(rental.rental_start_date + 'T00:00:00'); const e = new Date(rental.rental_end_date + 'T00:00:00'); return Math.ceil((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) })() + Number(rental.deposit_amount)).toLocaleString()}</p>
+            <p className="font-medium">฿{(Number(rental.rental_price) * rentalDays + Number(rental.deposit_amount)).toLocaleString()}</p>
           </div>
           {rental.returned_at && (
             <div>

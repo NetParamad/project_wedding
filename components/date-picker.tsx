@@ -97,12 +97,25 @@ export function DatePicker({
     return disabledDates.includes(iso)
   }
 
+  // While choosing the end of a range, the first unavailable day after the
+  // start caps how far the range can reach — you can't book across a blocked day.
+  const rangeEndCap = useMemo(() => {
+    if (mode !== 'range' || !valueStart || valueEnd || !disabledDates?.length) return null
+    const start = parseDate(valueStart)
+    const after = disabledDates
+      .map(parseDate)
+      .filter((d) => d > start)
+      .sort((a, b) => a.getTime() - b.getTime())
+    return after[0] ?? null
+  }, [mode, valueStart, valueEnd, disabledDates])
+
   function isDisabled(day: number) {
     const d = new Date(viewMonth.getFullYear(), viewMonth.getMonth(), day)
     if (d < minDate) return true
     if (mode === 'range' && valueStart && !valueEnd) {
       const start = parseDate(valueStart)
       if (d <= start) return true
+      if (rangeEndCap && d >= rangeEndCap) return true
     }
     return false
   }
@@ -152,7 +165,12 @@ export function DatePicker({
         onRangeChange?.(iso, '')
       } else {
         const start = parseDate(valueStart)
-        if (d > start) {
+        // Reject a range that would span an unavailable day — restart instead.
+        const spansBlocked = d > start && (disabledDates ?? []).some((bad) => {
+          const b = parseDate(bad)
+          return b > start && b <= d
+        })
+        if (d > start && !spansBlocked) {
           onRangeChange?.(valueStart, iso)
         } else {
           onRangeChange?.(iso, '')
