@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Noto_Sans_Thai } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
@@ -33,6 +33,13 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const notoSansThai = Noto_Sans_Thai({
+  variable: "--font-noto-sans-thai",
+  display: "swap",
+  subsets: ["thai", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,7 +47,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`} suppressHydrationWarning>
+      <body
+        className={`${notoSansThai.variable} ${geistSans.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
@@ -11,6 +12,13 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "var(--font-noto-sans-thai)",
+          "var(--font-geist-sans)",
+          ...defaultTheme.fontFamily.sans,
+        ],
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
