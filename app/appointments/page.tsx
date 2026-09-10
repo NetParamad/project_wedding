@@ -12,10 +12,10 @@ import Link from 'next/link'
 import type { Appointment, AppointmentService, Product, ProductImage } from '@/lib/db.types'
 
 const statusLabels: Record<string, string> = {
-  pending: 'รอยืนยัน',
+  pending: 'รอร้านยืนยัน',
   confirmed: 'ยืนยันแล้ว',
   completed: 'เสร็จสิ้น',
-  cancelled: 'ยกเลิก',
+  cancelled: 'ยกเลิกแล้ว',
 }
 
 const statusColors: Record<string, string> = {
@@ -61,16 +61,16 @@ export default function AppointmentsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">การนัดหมายของฉัน</h1>
+        <h1 className="text-3xl font-bold">นัดลองชุดของฉัน</h1>
         <Button asChild>
-          <Link href="/appointments/book">จองนัดหมาย</Link>
+          <Link href="/appointments/book">นัดลองชุด</Link>
         </Button>
       </div>
 
       {appointments.length === 0 ? (
         <div className="text-center py-16 space-y-4">
           <CalendarDays size={48} className="mx-auto text-muted-foreground" />
-          <p className="text-muted-foreground">ยังไม่มีการนัดหมาย</p>
+          <p className="text-muted-foreground">ยังไม่มีรายการนัดลองชุด</p>
           <Button asChild>
             <Link href="/products">เลือกชมสินค้า</Link>
           </Button>
@@ -111,7 +111,7 @@ export default function AppointmentsPage() {
                 </div>
                 <Button asChild variant="outline" size="sm" className="self-start sm:self-auto">
                   <Link href={`/appointments/${apt.id}`}>
-                    <Eye size={14} className="mr-1" /> ดู
+                    <Eye size={14} className="mr-1" /> ดูรายละเอียด
                   </Link>
                 </Button>
             </CardContent></Card>

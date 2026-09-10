@@ -63,7 +63,7 @@ export default async function ProductDetailPage({
           <div className="space-y-2">
             <Button asChild variant="outline" className="w-full">
               <Link href={`/appointments/book?product=${product.slug}`}>
-                จอง (ลองชุด)
+นัดลองชุด
               </Link>
             </Button>
             <Button asChild variant="default" className="w-full">

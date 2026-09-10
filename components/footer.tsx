@@ -11,9 +11,9 @@ async function AuthFooterLinks() {
   return (
     <>
       <Link href="/rentals" className="text-sm text-muted-foreground hover:text-foreground transition-colors">รายการเช่า</Link>
-      <Link href="/appointments" className="text-sm text-muted-foreground hover:text-foreground transition-colors">การนัดหมาย</Link>
+      <Link href="/appointments" className="text-sm text-muted-foreground hover:text-foreground transition-colors">รายการนัดลองชุด</Link>
       <Link href="/products/rent" className="text-sm text-muted-foreground hover:text-foreground transition-colors">เช่าชุด</Link>
-      <Link href="/appointments/book" className="text-sm text-muted-foreground hover:text-foreground transition-colors">จองนัดหมาย</Link>
+      <Link href="/appointments/book" className="text-sm text-muted-foreground hover:text-foreground transition-colors">นัดลองชุด</Link>
     </>
   );
 }

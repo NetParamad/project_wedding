@@ -33,7 +33,7 @@ function SidebarNav({ collapsed, onToggle }: { collapsed: boolean; onToggle: () 
     { href: '/admin/products', label: 'สินค้า', icon: Package },
     { href: '/admin/categories', label: 'หมวดหมู่', icon: Tags },
     { href: '/admin/rentals', label: 'รายการเช่า', icon: ShoppingBag },
-    { href: '/admin/appointments', label: 'การนัดหมาย', icon: CalendarDays },
+    { href: '/admin/appointments', label: 'นัดลองชุด', icon: CalendarDays },
     { href: '/admin/settings', label: 'ตั้งค่า', icon: Settings },
   ]
 
@@ -104,7 +104,7 @@ export function AdminSidebar() {
     { href: '/admin', label: 'แดชบอร์ด', icon: LayoutDashboard },
     { href: '/admin/products', label: 'สินค้า', icon: Package },
     { href: '/admin/rentals', label: 'รายการเช่า', icon: ShoppingBag },
-    { href: '/admin/appointments', label: 'นัดหมาย', icon: CalendarDays },
+    { href: '/admin/appointments', label: 'นัดลองชุด', icon: CalendarDays },
   ]
 
   const overflowItems = [

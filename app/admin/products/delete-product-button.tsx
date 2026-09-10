@@ -35,7 +35,7 @@ export function DeleteProductButton({ id }: { id: number }) {
 
       const refs: string[] = []
       if (rentalCount) refs.push(`รายการเช่า (${rentalCount})`)
-      if (appointmentCount) refs.push(`การนัดหมาย (${appointmentCount})`)
+      if (appointmentCount) refs.push(`นัดลองชุด (${appointmentCount})`)
       if (lockCount) refs.push(`การล็อควันที่ (${lockCount})`)
 
       if (refs.length) {

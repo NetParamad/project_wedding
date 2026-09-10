@@ -67,7 +67,7 @@ export default async function HomePage() {
               <Link href="/products">เลือกชมสินค้า</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="min-w-[180px]">
-              <Link href="/appointments/book">จองนัดหมาย</Link>
+              <Link href="/appointments/book">นัดลองชุด</Link>
             </Button>
           </div>
         </div>

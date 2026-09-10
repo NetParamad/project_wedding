@@ -24,7 +24,7 @@ export function MobileBottomNav() {
     { href: '/', label: 'หน้าแรก', icon: House },
     { href: '/products', label: 'สินค้า', icon: Package },
     { href: '/products/rent', label: 'เช่าชุด', icon: ShoppingBag },
-    { href: '/appointments/book', label: 'จอง', icon: CalendarDays },
+    { href: '/appointments/book', label: 'ลองชุด', icon: CalendarDays },
     { href: '/auth/login', label: 'เข้าสู่ระบบ', icon: User },
   ]
 
@@ -32,7 +32,7 @@ export function MobileBottomNav() {
     { href: '/', label: 'หน้าแรก', icon: House },
     { href: '/products', label: 'สินค้า', icon: Package },
     { href: '/rentals', label: 'รายการเช่า', icon: ShoppingBag },
-    { href: '/appointments', label: 'นัดหมาย', icon: CalendarDays },
+    { href: '/appointments', label: 'ลองชุด', icon: CalendarDays },
     { href: '/profile', label: 'บัญชี', icon: User },
   ]
 

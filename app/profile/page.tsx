@@ -162,7 +162,7 @@ export default function ProfilePage() {
         >
           <div className="flex items-center gap-3">
             <CalendarDays size={18} className="text-muted-foreground" />
-            <span className="text-sm font-medium">การนัดหมาย</span>
+            <span className="text-sm font-medium">นัดลองชุด</span>
           </div>
           <ChevronRight size={16} className="text-muted-foreground" />
         </Link>

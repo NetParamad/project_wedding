@@ -30,10 +30,10 @@ import type { Appointment, AppointmentService, Product, ProductImage } from '@/l
 const statusSteps = ['pending', 'confirmed', 'completed']
 
 const statusLabels: Record<string, string> = {
-  pending: 'รอดำเนินการ',
+  pending: 'รอร้านยืนยัน',
   confirmed: 'ยืนยันแล้ว',
   completed: 'เสร็จสิ้น',
-  cancelled: 'ยกเลิก',
+  cancelled: 'ยกเลิกแล้ว',
 }
 
 function formatDateThai(dateStr: string) {
@@ -184,7 +184,7 @@ function AppointmentDetailContent() {
       setEditing(false)
     } catch (err) {
       console.error(err)
-      alert('ไม่สามารถแก้ไขนัดหมายได้')
+      alert('แก้ไขวันนัดไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
     } finally {
       setSaving(false)
     }
@@ -220,7 +220,7 @@ function AppointmentDetailContent() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">รายละเอียดการนัดหมาย</h1>
+          <h1 className="text-2xl font-bold">รายละเอียดการนัดลองชุด</h1>
           <p className="text-sm text-muted-foreground">
             #{appointment.id} &middot; {formatDateThai(appointment.appointment_date)} {appointment.time_slot?.substring(0, 5)} &middot; {serviceName}
           </p>
@@ -230,7 +230,7 @@ function AppointmentDetailContent() {
       {isCancelled ? (
         <Card className="bg-red-50 border-red-200 text-center text-red-700 font-medium">
           <CardContent className="p-4">
-            การนัดหมายนี้ถูกยกเลิกแล้ว
+การนัดลองชุดนี้ถูกยกเลิกแล้ว
           </CardContent>
         </Card>
       ) : (
@@ -254,16 +254,16 @@ function AppointmentDetailContent() {
 
       {isPending && (
         <div className="flex flex-col items-end gap-2">
-          <p className="text-xs text-muted-foreground"><FileText size={14} className="inline mr-1" />คุณสามารถแก้ไขนัดหมายได้จนกว่า Admin จะยืนยัน</p>
+          <p className="text-xs text-muted-foreground"><FileText size={14} className="inline mr-1" />แก้ไขวันและเวลานัดได้ จนกว่าทางร้านจะยืนยัน</p>
           <Dialog open={editing} onOpenChange={setEditing}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" onClick={openEditDialog}>
-                <Pencil size={14} className="mr-1" /> แก้ไขนัดหมาย
+                <Pencil size={14} className="mr-1" /> แก้ไขวันนัด
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>แก้ไขนัดหมาย</DialogTitle>
+                <DialogTitle>แก้ไขวันนัด</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-2">
                 <div className="space-y-2">
@@ -330,7 +330,7 @@ function AppointmentDetailContent() {
 
       <Card>
         <CardContent className="p-4 space-y-3 text-sm">
-        <h2 className="font-semibold">รายละเอียดการนัดหมาย</h2>
+        <h2 className="font-semibold">รายละเอียดการนัดลองชุด</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <span className="text-muted-foreground">บริการ</span>
@@ -367,7 +367,7 @@ function AppointmentDetailContent() {
           </div>
           {appointment.phone && (
             <div>
-              <span className="text-muted-foreground">เบอร์โทร</span>
+              <span className="text-muted-foreground">เบอร์โทรศัพท์</span>
               <p className="font-medium">{appointment.phone}</p>
             </div>
           )}

@@ -12,11 +12,11 @@ export function BookingChart({ data }: Props) {
     return (
       <Card>
         <CardHeader className="p-4 pb-0">
-          <CardTitle className="text-sm font-semibold">สินค้าที่จองมากที่สุด</CardTitle>
+          <CardTitle className="text-sm font-semibold">ชุดที่ถูกนัดลองมากที่สุด</CardTitle>
         </CardHeader>
         <CardContent className="p-4">
           <div className="h-64 flex items-center justify-center text-sm text-muted-foreground">
-            ยังไม่มีการจอง
+            ยังไม่มีรายการนัดลองชุด
           </div>
         </CardContent>
       </Card>
@@ -26,7 +26,7 @@ export function BookingChart({ data }: Props) {
   return (
     <Card>
       <CardHeader className="p-4 pb-0">
-        <CardTitle className="text-sm font-semibold">สินค้าที่จองมากที่สุด</CardTitle>
+        <CardTitle className="text-sm font-semibold">ชุดที่ถูกนัดลองมากที่สุด</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <div className="h-80">
@@ -47,7 +47,7 @@ export function BookingChart({ data }: Props) {
                 tickFormatter={(v: string) => v.length > 18 ? v.slice(0, 18) + '...' : v}
               />
               <Tooltip
-                formatter={(value) => [`${value} ครั้ง`, 'จำนวนการจอง']}
+                formatter={(value) => [`${value} ครั้ง`, 'จำนวนครั้งที่นัด']}
                 labelFormatter={(label) => String(label)}
               />
               <Bar dataKey="count" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />

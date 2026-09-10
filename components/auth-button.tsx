@@ -72,7 +72,7 @@ export function AuthButton() {
         <DropdownMenuItem asChild>
           <Link href="/appointments" className="flex items-center gap-2 cursor-pointer">
             <CalendarDays size={14} />
-            การนัดหมาย
+นัดลองชุด
           </Link>
         </DropdownMenuItem>
         {profile.role === 'admin' && (

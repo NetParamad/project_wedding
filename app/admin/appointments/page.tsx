@@ -54,14 +54,14 @@ export default function AdminAppointmentsPage() {
     return (
       <div className="text-center py-16 space-y-4">
         <CalendarDays size={48} className="mx-auto text-muted-foreground" />
-        <p className="text-muted-foreground">ยังไม่มีการนัดหมาย</p>
+        <p className="text-muted-foreground">ยังไม่มีรายการนัดลองชุด</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">การนัดหมาย</h1>
+      <h1 className="text-3xl font-bold">นัดลองชุด</h1>
       <Card>
         <CardContent className="p-0">
         <Table style={{ minWidth: 850 }}>
