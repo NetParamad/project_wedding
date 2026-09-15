@@ -24,7 +24,7 @@ export default async function ContactPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="bg-gradient-to-b from-primary/5 to-background py-12 sm:py-20 lg:py-28">
+      <section className="bg-gradient-to-b from-primary/30 via-secondary/70 to-background py-12 sm:py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
             ติดต่อเรา

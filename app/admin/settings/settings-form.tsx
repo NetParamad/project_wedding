@@ -26,6 +26,7 @@ interface Props {
 
 const themeLabel: Record<string, string> = {
   zinc: 'ซิงค์',
+  brown: 'น้ำตาล',
   rose: 'โรส',
   blue: 'น้ำเงิน',
   green: 'เขียว',

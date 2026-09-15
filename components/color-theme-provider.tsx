@@ -6,6 +6,7 @@ import { hexToHsl, hslToString, getForegroundLightness } from '@/lib/color'
 
 export const COLOR_THEMES = [
   { value: 'zinc', swatch: 'bg-zinc-500', swatches: ['bg-zinc-500', 'bg-zinc-400', 'bg-zinc-300'] },
+  { value: 'brown', swatch: 'bg-amber-900', swatches: ['bg-amber-900', 'bg-amber-700', 'bg-amber-200'] },
   { value: 'rose', swatch: 'bg-rose-500', swatches: ['bg-rose-500', 'bg-rose-400', 'bg-rose-300'] },
   { value: 'blue', swatch: 'bg-blue-500', swatches: ['bg-blue-500', 'bg-blue-400', 'bg-blue-300'] },
   { value: 'green', swatch: 'bg-green-600', swatches: ['bg-green-600', 'bg-green-500', 'bg-green-400'] },

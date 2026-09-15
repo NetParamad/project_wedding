@@ -31,27 +31,43 @@ export default async function HomePage() {
     '/gallery/wd_gal_6.jpg',
   ]
 
-  const testimonials = [
-    { text: "รูปออกมาสวยทุกรูปเลยค่ะ ต้องขอบคุณพี่บาสและพี่เล็ก ที่คอยดูแลอย่างดีตอนถ่ายพรี ทั้งจัดเต็มเรื่องแต่งหน้า ทำผม รวมถึงชุดล้านนาที่งด งามมากๆ ทุกอย่างลงตัวจน ทำให้การถ่ายครั้งนี้เป็น ประสบการณ์ที่น่าประทับใจ และอบอุ่นจริงๆค่ะ", author: "— สาระ & เจมส์", initial: "ร" },
-    { text: "ขอบคุณเหมือนกันค่ะ พี่บาสกับพี่เล็กน่ารักมากๆ ไม่ เป็นไรเลยค่ะพี่ ชุดสวยมากกก หน้าผมสวยหมดดด พี่ช่วยคิด ท่าโพสต์ให้ด้วยเริสมากกเลย ค่ะ", author: "— ไมเคิล & ปรียา", initial: "ข" },
-    { text: "ชุดล้านนา โทนพาสเทลด้วยความที่ตรีมงานแต่งเป็นโทนพาสเทล กับสถานที่ เรือนไทยทางภาคเหนือ บวกกับเจ้าสาวอยากได้ชุดล้าน นาที่เข้ากับธีมงาน และก็ได้ถูกใจชุดล้านนาจาก ร้าน ซิน ณ กร จ. ลำปาง ซึ่งตรงตามตรีมงานมากพี่ๆจากร้าน ชิน ณ กร ดูแลดี ให้บริการดี ทั้งแต่งหน้า ทำผม และแต่งตัว (ชุดเป็นชุดนุ่งสด) ตั้งแต่วันฟิตติ้ง จนถึงวันงานเลยค่ะวันงานจริง พอแต่งหน้าทำผม แล้วสวย ถูกใจมากๆ แขก ในงานชมตลอดงาน ถ่ายรูปออกมาสวยเกินคาดมากๆ ค่ะเผื่อเป็นไอเดียให้เจ้าสาว ที่ชอบสไตล์ล้านนา นะคะ งานแต่งล้านนา ชุดล้านนา", author: "— เอมิลี่ & เดวิด", initial: "ช" },
-    { text: "ขอบคุณพี่บาส พี่เล็กแบบ มากๆๆๆๆๆๆๆๆๆเลยนะคะ แบบไม่เสียใจเลยจริงๆที่ให้ พี่ๆดูแล งานประณีตมากๆๆ ดูแลอย่างดี ประทับใจมากๆ เลยค่ะ ขอบคุณอีกครั้งจริงๆ นะคะ", author: "— เอมิลี่ & เดวิด", initial: "ข" },
-    { text: "รักชินกร เป็นมากกว่าร้าน คือการดูแลที่โคตรจะดี พี่บาส พี่เล็ก น่ารัก เป็นกันเองที่สุด เลยค่ะ ขอบคุณพี่ๆ อีกครั้งนะคะ", author: "— เอมิลี่ & เดวิด", initial: "ร" },
-    { text: "ขอบคุณพี่บาส พี่เล็ก พี่ไก่ มากๆนะคะ ที่ทำให้วันสำคัญของน้องสองคน สวยงามและสมบูรณ์แบบทุกอย่างออกมาดีและดูแล มากกว่าการเป็นร้านเช่า ชุดเลย", author: "— เอมิลี่ & เดวิด", initial: "ข" },
-    { text: "ขอบคุณ พี่เล็ก พี่บาส นะคะแขกชมสวยมากกๆ ทั้งที่ งาน ทั้งในโซเซียล เค้า บอกว่าชุดไทย หน้าผมเจ้าสาว สวยมากๆ และ ขอบคุณที่ดูแลเรา 2 คน ตลอดงานนะคะ", author: "— เอมิลี่ & เดวิด", initial: "ข" },
-    { text: "งานละเมียดละมัย แต่งหน้าสวย ชุดสวย ดูแลดี แนะน่าร้าน ชิน ณ กร เลยค่ะ ไม่ผิดหวัง ประทับใจมาก ขอบคุณพี่เล็ก พี่บาส นะคะ", author: "— เอมิลี่ & เดวิด", initial: "ง" },
-    { text: "พี่ทั้ง 2 เป็นพี่ที่น่ารักมากๆ ใส่ใจทุกรายละเอียดที่เกี่ยวกับเรา ปราณีต ทุกตรงคอยดูแลทั้งหน้าผม ชุด ตลอดงาน ไม่หยุดเลย จนเราเองแอบเกรงใจกลัวพี่ๆ จะเหนื่อยจะบอกว่า เลือกไม่ผิดจริงๆ กับการดูแลของทางชิน ณ กร ที่มอบให้เราในวันงาน ใครที่ยังลังเล เลือกเถอะ ค่ะ แล้วจะไม่ผิดหวังที่ได้เลือก ชิน ณ กร", author: "— เอมิลี่ & เดวิด", initial: "พ" },
-    { text: "What a great experience! Did everything from consulting on style, full dress up, makeup and photography. Very friendly and welcoming as well, highly recommend.", author: "— เอมิลี่ & เดวิด", initial: "W" },
-    { text: "ร้าน Pre wedding ใกล้วัดป่าตัน อำเภอแม่ทะ เป็นร้านเล็กๆน่ารัก พี่ๆใส่ใจทุกรายละเอียด เสื้อผ้าสวยๆ หรือจะให้ถ่ายรูปเลยก็ได้นะครับ รอบหมู่บ้านมีสถานที่สวยให้เลือกเยอะ เช่น ริมน้ำ ภูเขา วิวใต้ต้นไม้", author: "— เอมิลี่ & เดวิด", initial: "ร" },
-    { text: "ช่างมืออาชีพ มากประสบการณ์ ชุดไทยมีรายละเอียดที่พิถีทันมาก แตกต่างจากเจ้าอื่นอย่างสิ้นเชิง คุณผู้หญิงที่ชื่นชอบในผ้าไทยลองมาสัมผัสด้วยตัวเองจะเห็นความแตกต่างในรายละเอียดอย่างแน่นอน", author: "— เอมิลี่ & เดวิด", initial: "ช" },
-    { text: "คิดถูกมากที่เลือก ชิน ณ กร ให้จัดการเรื่องชุดแต่งงาน และแต่งหน้า ทำผม ไม่ผิดหวังเลยค่ะ :-)", author: "— เอมิลี่ & เดวิด", initial: "ค" },
+  const testimonialImages = [
+    '/review/Screenshot_20260804_175425_Instagram.jpg',
+    '/review/Screenshot_20260804_175445_Instagram.jpg',
+    '/review/Screenshot_20260804_175525_Instagram.jpg',
+    '/review/Screenshot_20260804_175552_Instagram.jpg',
+    '/review/Screenshot_20260804_175634_Instagram.jpg',
+    '/review/Screenshot_20260804_175656_Instagram.jpg',
+    '/review/Screenshot_20260804_175740_Instagram.jpg',
+    '/review/Screenshot_20260804_175800_Instagram.jpg',
+    '/review/Screenshot_20260804_175817_Instagram.jpg',
+    '/review/Screenshot_20260804_175839_Instagram.jpg',
+    '/review/Screenshot_20260804_175910_Instagram.jpg',
+    '/review/Screenshot_20260804_175944_Instagram.jpg',
+    '/review/Screenshot_20260804_180026_Instagram.jpg',
+    '/review/Screenshot_20260804_180102_Instagram.jpg',
+    '/review/Screenshot_20260804_180124_Instagram.jpg',
+    '/review/Screenshot_20260804_180206_Instagram.jpg',
+    '/review/Screenshot_20260804_180220_Instagram.jpg',
+    '/review/Screenshot_20260804_180242_Instagram.jpg',
+    '/review/Screenshot_20260804_180324_Instagram.jpg',
+    '/review/Screenshot_20260804_180345_Instagram.jpg',
+    '/review/Screenshot_20260804_180503_Instagram.jpg',
+    '/review/Screenshot_20260804_180656_Instagram.jpg',
+    '/review/Screenshot_20260804_180730_Instagram.jpg',
+    '/review/Screenshot_20260804_180827_Instagram.jpg',
+    '/review/Screenshot_20260804_180926_Instagram.jpg',
+    '/review/Screenshot_20260804_181110_Instagram.jpg',
+    '/review/Screenshot_20260804_181652_Instagram.jpg',
+    '/review/Screenshot_20260804_181707_Instagram.jpg',
+    '/review/Screenshot_20260804_181845_Instagram.jpg',
   ];
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-primary/[0.03] to-background py-20 lg:py-32">
-        <div className="absolute inset-0 bg-[url('/wallpaper/store.jpg')] bg-cover bg-center opacity-[0.06]" />
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/30 via-secondary/70 to-background py-20 lg:py-32">
+        <div className="absolute inset-0 bg-[url('/wallpaper/store.jpg')] bg-cover bg-center opacity-[0.08]" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <p className="text-primary font-medium tracking-[0.1em] uppercase text-sm">
             ร้านเวดดิ้งเล็กๆ ที่เน้นคุณภาพ
@@ -60,7 +76,7 @@ export default async function HomePage() {
             ความฝันในวันวิวาห์เริ่มต้นที่นี่
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            พบกับคอลเลกชันชุดแต่งงาน สูท และเครื่องประดับสุดพิเศษสำหรับวันสำคัญของคุณ
+            พบกับคอลเลกชันชุดจากทางร้าน ชุดล้านนา ชุดไทย ชุดเดรส ราตรี พร้อมเครื่องประดับให้กับวันสำคัญของบ่าวสาว
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Button asChild size="lg" className="min-w-[180px]">
@@ -93,7 +109,7 @@ export default async function HomePage() {
 
       {/* Categories */}
       {categories.length > 0 && (
-        <section className="py-16 lg:py-24 bg-muted/30">
+        <section className="py-16 lg:py-24 bg-muted/60">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">หมวดหมู่</h2>
@@ -148,18 +164,21 @@ export default async function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 lg:py-24 bg-muted/30">
+      <section className="py-16 lg:py-24 bg-muted/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center space-y-2">
             <p className="text-primary font-medium tracking-[0.1em] uppercase text-sm">ความประทับใจจากคู่บ่าวสาว</p>
           </div>
           <Marquee>
-            {[...testimonials, ...testimonials].map((item, idx) => (
-              <Card key={idx} className="shrink-0 w-[320px] sm:w-[400px] border-0 shadow-sm">
-                <CardContent className="p-6 text-center space-y-4">
-                  <p className="text-sm text-muted-foreground italic leading-relaxed">
-                    &ldquo;{item.text}&rdquo;
-                  </p>
+            {[...testimonialImages, ...testimonialImages].map((img, idx) => (
+              <Card key={idx} className="shrink-0 w-[220px] sm:w-[260px] border-0 shadow-sm overflow-hidden bg-card p-0">
+                <CardContent className="p-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img}
+                    alt="รีวิวความประทับใจจากคู่บ่าวสาว"
+                    className="h-[420px] w-full object-cover object-top"
+                  />
                 </CardContent>
               </Card>
             ))}

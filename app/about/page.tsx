@@ -46,7 +46,7 @@ export default async function AboutPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="bg-gradient-to-b from-primary/5 to-background py-12 sm:py-20 lg:py-28">
+      <section className="bg-gradient-to-b from-primary/30 via-secondary/70 to-background py-12 sm:py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
             เกี่ยวกับเรา {storeName}
@@ -62,13 +62,13 @@ export default async function AboutPage() {
           <div className="max-w-3xl mx-auto space-y-6">
             <h2 className="text-2xl font-bold">{storeName}</h2>
             <p className="text-muted-foreground leading-relaxed">
-              เราเป็นร้านค้าที่พร้อมให้บริการสินค้าคุณภาพหลากหลายประเภท พันธกิจของเราคือการมอบสินค้าที่มีคุณภาพในราคาที่เป็นธรรม พร้อมให้บริการลูกค้าอย่างดีที่สุด ไม่ว่าคุณกำลังมองหาชุดแต่งงาน ของแต่งงาน หรือของใช้ทั่วไป เราก็พร้อมให้บริการ เลือกชมสินค้าของเราได้เลย
+              พี่เล็กเป็นช่างแต่งหน้า และพี่บาสเป็นช่างทำผม เราทำงานกันแค่ 2 คน ดูแลลูกค้าเองทั้งหมดรวมถึงการแต่งตัวให้บ่าวสาว จึงรับลูกค้าได้แค่ 1-3 คู่ต่อรอบต่อวัน ประสบการณ์การทำงานของเราทั้งคู่ทำมาไม่ต่ำกว่า 10 ปี เราตั้งใจทำบ้านให้เป็นร้าน &ldquo;home office&rdquo; ย้ายที่ทำงานเดิมจากกรุงเทพมหานคร มายังบ้านเกิดจังหวัดลำปาง และวางแผนจะทำบ้านให้เป็นออฟฟิศ ทางร้านเราเน้นใส่ใจลูกค้าคู่ต่อคู่ ดูแลเป็นกันเอง พร้อมดูแลคุณตลอดทั้งวันงานที่แสนพิเศษของท่านจนจบงาน
             </p>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-muted/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((f) => (
