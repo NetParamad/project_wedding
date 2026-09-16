@@ -5,6 +5,7 @@ import { SearchBar } from '@/components/search-bar'
 import { CategoryFilter } from './category-filter'
 import { ProductGrid } from './_components/product-grid'
 import { SortSelect } from './_components/sort-select'
+import { ProductGridSkeleton } from '@/components/loading'
 
 interface Props {
   searchParams: Promise<{ category?: string; search?: string; page?: string; sort?: string }>
@@ -39,7 +40,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         />
       </div>
 
-      <Suspense fallback={<div className="text-center py-16">สินค้า...</div>}>
+      <Suspense fallback={<div className="py-8"><ProductGridSkeleton count={8} /></div>}>
         <ProductGrid searchParams={searchParams} />
       </Suspense>
     </div>
