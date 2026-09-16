@@ -20,6 +20,7 @@ export function Pagination({ currentPage, totalPages, searchParams }: Props) {
     const params = new URLSearchParams()
     if (searchParams.category) params.set('category', searchParams.category)
     if (searchParams.search) params.set('search', searchParams.search)
+    if (searchParams.sort) params.set('sort', searchParams.sort)
     if (page > 1) params.set('page', page.toString())
     const qs = params.toString()
     return qs ? `${pathname}?${qs}` : pathname

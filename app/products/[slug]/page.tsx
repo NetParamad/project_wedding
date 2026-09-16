@@ -46,6 +46,15 @@ export default async function ProductDetailPage({
             <h1 className="text-3xl font-bold">{productName}</h1>
           </div>
 
+          {product.description && (
+            <div className="space-y-2">
+              <h3 className="font-medium">รายละเอียด</h3>
+              <p className="text-sm text-muted-foreground whitespace-pre-line">
+                {product.description}
+              </p>
+            </div>
+          )}
+
           <Card className="border-blue-200 bg-blue-50">
             <CardContent className="p-4 space-y-2">
               <h3 className="font-semibold text-blue-800 flex items-center gap-2">
@@ -63,7 +72,7 @@ export default async function ProductDetailPage({
           <div className="space-y-2">
             <Button asChild variant="outline" className="w-full">
               <Link href={`/appointments/book?product=${product.slug}`}>
-นัดลองชุด
+                นัดลองชุด
               </Link>
             </Button>
             <Button asChild variant="default" className="w-full">
@@ -72,15 +81,6 @@ export default async function ProductDetailPage({
               </Link>
             </Button>
           </div>
-
-          {product.description && (
-            <div className="space-y-2">
-              <h3 className="font-medium">รายละเอียด</h3>
-              <p className="text-sm text-muted-foreground whitespace-pre-line">
-                {product.description}
-              </p>
-            </div>
-          )}
 
         </div>
       </div>

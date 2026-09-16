@@ -6,7 +6,7 @@ import { CategoryFilter } from '../category-filter'
 import { Pagination } from '../pagination'
 
 interface Props {
-  searchParams: Promise<{ category?: string; search?: string; page?: string }>
+  searchParams: Promise<{ category?: string; search?: string; page?: string; sort?: string }>
 }
 
 export async function ProductGrid({ searchParams }: Props) {
@@ -23,6 +23,7 @@ export async function ProductGrid({ searchParams }: Props) {
     search,
     page: isNaN(page) ? 1 : page,
     pageSize: 12,
+    sort: (params.sort as 'oldest' | 'price_desc' | 'price_asc' | undefined),
   })
 
   return (

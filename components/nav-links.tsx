@@ -18,8 +18,8 @@ export function NavLinks({ labels }: { labels: Record<keyof typeof icons, string
       <Link
         key={href}
         href={href}
-        className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
-          isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+        className={`flex items-center gap-1.5 self-stretch border-b-2 pt-1 text-sm font-medium transition-colors ${
+          isActive ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
         <Icon size={16} />

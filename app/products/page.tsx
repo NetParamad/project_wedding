@@ -4,9 +4,10 @@ import { getCategories } from '@/lib/supabase/queries'
 import { SearchBar } from '@/components/search-bar'
 import { CategoryFilter } from './category-filter'
 import { ProductGrid } from './_components/product-grid'
+import { SortSelect } from './_components/sort-select'
 
 interface Props {
-  searchParams: Promise<{ category?: string; search?: string; page?: string }>
+  searchParams: Promise<{ category?: string; search?: string; page?: string; sort?: string }>
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
@@ -20,9 +21,14 @@ export default async function ProductsPage({ searchParams }: Props) {
           <h1 className="text-3xl font-bold">สินค้า</h1>
           <p className="text-muted-foreground mt-1">เลือกชมสินค้า</p>
         </div>
-        <Suspense>
-          <SearchBar />
-        </Suspense>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <Suspense>
+            <SearchBar />
+          </Suspense>
+          <Suspense>
+            <SortSelect />
+          </Suspense>
+        </div>
       </div>
 
       <div className="md:hidden flex gap-2 overflow-x-auto pb-2">

@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { getAllActiveProducts, getProductUnavailableDates } from '@/lib/supabase/queries'
+import { getAllActiveProducts, getCategories, getProductUnavailableDates } from '@/lib/supabase/queries'
 import { createRentalAction } from '@/app/actions/rentals'
 import { rentalDayCount } from '@/lib/date-utils'
 import { Loader2, ArrowLeft, ClipboardList, Wallet } from 'lucide-react'
@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import Link from 'next/link'
-import type { Product, ProductImage } from '@/lib/db.types'
+import type { Category, Product, ProductImage } from '@/lib/db.types'
 
 export default function NewRentalPage() {
   return (
@@ -49,11 +49,13 @@ function NewRentalContent() {
   const preselectProductSlug = searchParams.get('product')
 
   const [products, setProducts] = useState<(Product & { images: ProductImage[] })[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
 
   const [selectedProductId, setSelectedProductId] = useState('')
+  const [selectedCategoryId, setSelectedCategoryId] = useState('all')
   const [rentalStart, setRentalStart] = useState('')
   const [rentalEnd, setRentalEnd] = useState('')
   const [phone, setPhone] = useState('')
@@ -75,14 +77,19 @@ function NewRentalContent() {
           router.push('/auth/login')
           return
         }
-        const allProducts = await getAllActiveProducts(supabase)
+        const [allProducts, cats] = await Promise.all([
+          getAllActiveProducts(supabase),
+          getCategories(supabase),
+        ])
         const available = allProducts.filter(p => !p.is_locked)
         setProducts(available)
+        setCategories(cats)
 
         if (preselectProductSlug) {
           const matched = available.find(p => p.slug === preselectProductSlug)
           if (matched) {
             setSelectedProductId(matched.id.toString())
+            setSelectedCategoryId(matched.category_id?.toString() ?? 'all')
             setLoading(false)
             return
           }
@@ -182,11 +189,30 @@ function NewRentalContent() {
           <CardContent className="p-4 text-sm text-blue-800 space-y-1">
             <p>• เช่าชุดได้ตั้งแต่วันที่ต้องการ จำนวนวันเช่าสูงสุด 30 วัน</p>
             <p>• ค่าประกันจะคืนเมื่อคืนชุดในสภาพดี</p>
+            <p>• ขนาดชุดของทางร้านวัดได้จากไซส์เสื้อมาตรฐาน</p>
+            <p>• สอบถามเพิ่มเติม โทร. 089-668-1959</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-4">
+          <div className="space-y-2">
+            <Label>เลือกหมวดหมู่</Label>
+            <Select value={selectedCategoryId} onValueChange={(v) => { setSelectedCategoryId(v); setSelectedProductId(''); setRentalStart(''); setRentalEnd(''); setErrors((prev) => ({ ...prev, product: '' })) }}>
+              <SelectTrigger>
+                <SelectValue placeholder="เลือกหมวดหมู่" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">ทุกหมวดหมู่</SelectItem>
+                {categories.map(cat => (
+                  <SelectItem key={cat.id} value={cat.id.toString()}>
+                    {cat.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label>เลือกสินค้า <span className="text-destructive">*</span></Label>
             <Select value={selectedProductId} onValueChange={(v) => { setSelectedProductId(v); setRentalStart(''); setRentalEnd(''); setErrors((prev) => ({ ...prev, product: '' })) }}>
@@ -194,11 +220,13 @@ function NewRentalContent() {
                 <SelectValue placeholder="เลือกสินค้า" />
               </SelectTrigger>
               <SelectContent>
-                {products.map(p => (
-                  <SelectItem key={p.id} value={p.id.toString()}>
-                    {p.name}
-                  </SelectItem>
-                ))}
+                {products
+                  .filter(p => selectedCategoryId === 'all' || p.category_id?.toString() === selectedCategoryId)
+                  .map(p => (
+                    <SelectItem key={p.id} value={p.id.toString()}>
+                      {p.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
             {errors.product && <p className="text-sm text-destructive">{errors.product}</p>}

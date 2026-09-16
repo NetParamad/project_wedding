@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { getActiveAppointmentServices, getAppointmentsByDate, getAllActiveProducts, getProductUnavailableDates } from '@/lib/supabase/queries'
+import { getActiveAppointmentServices, getAppointmentsByDate, getAllActiveProducts, getCategories, getProductUnavailableDates } from '@/lib/supabase/queries'
 import { createAppointmentAction } from '@/app/actions/appointments'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import Link from 'next/link'
-import type { AppointmentService, Product, ProductImage } from '@/lib/db.types'
+import type { AppointmentService, Category, Product, ProductImage } from '@/lib/db.types'
 
 export default function BookAppointmentPage() {
   return (
@@ -41,12 +41,14 @@ function BookAppointmentContent() {
 
   const [services, setServices] = useState<AppointmentService[]>([])
   const [products, setProducts] = useState<(Product & { images: ProductImage[] })[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [occupiedSlots, setOccupiedSlots] = useState<{ time_slot: string; end_time: string; service_id: number }[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
   const [selectedServiceId, setSelectedServiceId] = useState('')
   const [selectedProductId, setSelectedProductId] = useState('none')
+  const [selectedCategoryId, setSelectedCategoryId] = useState('all')
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [phone, setPhone] = useState('')
@@ -66,18 +68,21 @@ function BookAppointmentContent() {
           router.push('/auth/login')
           return
         }
-        const [svc, allProducts] = await Promise.all([
+        const [svc, allProducts, cats] = await Promise.all([
           getActiveAppointmentServices(supabase),
           getAllActiveProducts(supabase),
+          getCategories(supabase),
         ])
         const available = allProducts.filter(p => !p.is_locked)
         setServices(svc)
         setProducts(available)
+        setCategories(cats)
 
         if (preselectProductSlug) {
           const matched = available.find(p => p.slug === preselectProductSlug)
           if (matched) {
             setSelectedProductId(matched.id.toString())
+            setSelectedCategoryId(matched.category_id?.toString() ?? 'all')
             const tryOn = svc.find(s => s.type === 'try_on')
             if (tryOn) setSelectedServiceId(tryOn.id.toString())
             setLoading(false)
@@ -210,8 +215,10 @@ function BookAppointmentContent() {
       <Card className="border-blue-200 bg-blue-50">
         <CardContent className="p-4 text-sm text-blue-800 space-y-1">
           <p>• ค่าบริการ 500 บาท ต่อการนัด 1 ครั้ง</p>
-          <p>• เลือกชุดที่อยากลองไว้ล่วงหน้าได้ (จะเลือกหรือไม่ก็ได้)</p>
-          <p>• ยกเลิกได้ก่อนถึงวันนัด</p>
+          <p>• เลือกชุดที่อยากลองไว้ล่วงหน้าได้ (จะเลือกหรือไม่ก็ได้) หรือ เลือกปรึกษากับทางร้าน</p>
+          <p>• ยกเลิกได้ก่อนถึงวันนัด 1 วัน</p>
+          <p>• ขนาดชุดของทางร้านวัดได้จากไซส์เสื้อมาตรฐาน</p>
+          <p>• สอบถามเพิ่มเติม โทร. 089-668-1959</p>
         </CardContent>
       </Card>
 
@@ -236,6 +243,24 @@ function BookAppointmentContent() {
           </div>
 
           {selectedService?.type === 'try_on' && (
+            <>
+            <div className="space-y-2">
+              <Label>เลือกหมวดหมู่</Label>
+              <Select value={selectedCategoryId} onValueChange={(v) => { setSelectedCategoryId(v); setSelectedProductId('none') }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="เลือกหมวดหมู่" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">ทุกหมวดหมู่</SelectItem>
+                  {categories.map(cat => (
+                    <SelectItem key={cat.id} value={cat.id.toString()}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <Label>เลือกชุดที่อยากลอง (จะเลือกหรือไม่ก็ได้)</Label>
               <Select value={selectedProductId} onValueChange={setSelectedProductId}>
@@ -244,7 +269,9 @@ function BookAppointmentContent() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">—</SelectItem>
-                  {products.map(p => (
+                  {products
+                    .filter(p => selectedCategoryId === 'all' || p.category_id?.toString() === selectedCategoryId)
+                    .map(p => (
                     <SelectItem key={p.id} value={p.id.toString()}>
                       {p.name}
                     </SelectItem>
@@ -274,6 +301,7 @@ function BookAppointmentContent() {
                 </div>
               )}
             </div>
+            </>
           )}
 
           <div className="space-y-2">
@@ -345,7 +373,7 @@ function BookAppointmentContent() {
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="เช่น สอบถามไซซ์ หรือแจ้งความต้องการพิเศษ"
+              placeholder="เช่น แจ้งขนาดไซส์ให้ทางร้าน / แจ้งความต้องการพิเศษเพิ่มเติม"
               rows={3}
             />
           </div>

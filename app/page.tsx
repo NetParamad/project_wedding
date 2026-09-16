@@ -69,14 +69,14 @@ export default async function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-b from-primary/30 via-secondary/70 to-background py-20 lg:py-32">
         <div className="absolute inset-0 bg-[url('/wallpaper/store.jpg')] bg-cover bg-center opacity-[0.08]" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <p className="text-primary font-medium tracking-[0.1em] uppercase text-sm">
-            ร้านเวดดิ้งเล็กๆ ที่เน้นคุณภาพ
+          <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">
+            สัมผัสความงามอันอ่อนช้อย ด้วยเสน่ห์กลิ่นอายล้านนา
           </p>
-          <h1 className="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">
-            ความฝันในวันวิวาห์เริ่มต้นที่นี่
+          <h1 className="text-6xl lg:text-8xl font-bold tracking-tight leading-tight text-balance">
+            ร้อยเรียงความฝันในวันวิวาห์ ด้วยเสน่ห์ผืนผ้าทางล้านนา
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            พบกับคอลเลกชันชุดจากทางร้าน ชุดล้านนา ชุดไทย ชุดเดรส ราตรี พร้อมเครื่องประดับให้กับวันสำคัญของบ่าวสาว
+          <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
+            ถักทอความรัก ความผูกพันผ่านเส้นสายผืนผ้าพร้อมเครื่องศิราภรณ์อันเลอค่า ให้คอลเลกชันชุดล้านนาทรงเสน่ห์ ชุดไทยสุดสง่า และชุดราตรีร่วมสมัย พาเนรมิตช่วงเวลาแห่งความสุข โอบล้อมคู่บ่าวสาวด้วยความงดงามดั่งบทกวีที่ไม่เคยลบเลือน
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Button asChild size="lg" className="min-w-[180px]">
@@ -129,8 +129,11 @@ export default async function HomePage() {
                         className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
                       />
                     </div>
-                    <div className="p-3 text-center space-y-0.5">
+                    <div className="p-3 text-center space-y-1">
                       <p className="font-medium text-sm">{cat.name}</p>
+                      {cat.description && (
+                        <p className="text-xs text-muted-foreground leading-relaxed">{cat.description}</p>
+                      )}
                     </div>
                   </Link>
                 </Card>
@@ -144,7 +147,7 @@ export default async function HomePage() {
       <section className="py-16 lg:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="text-center space-y-2">
-            <p className="text-primary font-medium tracking-[0.1em] uppercase text-sm">เลือกชมสินค้า</p>
+            <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">เลือกชมสินค้า</p>
           </div>
           {featured.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -167,7 +170,7 @@ export default async function HomePage() {
       <section className="py-16 lg:py-24 bg-muted/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center space-y-2">
-            <p className="text-primary font-medium tracking-[0.1em] uppercase text-sm">ความประทับใจจากคู่บ่าวสาว</p>
+            <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">ความประทับใจจากคู่บ่าวสาว</p>
           </div>
           <Marquee>
             {[...testimonialImages, ...testimonialImages].map((img, idx) => (
@@ -190,7 +193,7 @@ export default async function HomePage() {
       <section className="py-16 lg:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center space-y-2">
-            <p className="text-primary font-medium tracking-[0.1em] uppercase text-sm">แรงบันดาลใจสำหรับวันวิวาห์</p>
+            <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">แรงบันดาลใจสำหรับวันวิวาห์</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {galleryImages.map((img, i) => (

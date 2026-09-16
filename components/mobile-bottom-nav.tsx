@@ -47,17 +47,19 @@ export function MobileBottomNav() {
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = pathname === tab.href ||
-            (tab.href !== '/' && pathname.startsWith(tab.href))
+            (tab.href !== '/' && pathname.startsWith(tab.href)) ||
+            (tab.label === 'เช่าชุด' && pathname.startsWith('/rentals')) ||
+            (tab.label === 'ลองชุด' && pathname.startsWith('/appointments/book'))
 
           return (
             <Link
               key={tab.href}
               href={tab.href}
               className={cn(
-                'flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors',
+                'flex flex-col items-center justify-center gap-0.5 flex-1 h-full border-t-2 -mt-px transition-colors',
                 isActive
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'text-primary border-primary'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
               )}
             >
               <Icon size={20} />

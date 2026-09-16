@@ -453,6 +453,7 @@ export async function getActiveProducts(
     search?: string
     page?: number
     pageSize?: number
+    sort?: 'oldest' | 'price_desc' | 'price_asc'
   }
 ) {
   const page = options?.page ?? 1
@@ -464,7 +465,6 @@ export async function getActiveProducts(
     .from('products')
     .select('*, images:product_images(*)', { count: 'exact' })
     .eq('is_active', true)
-    .order('created_at', { ascending: false })
 
   if (options?.category_id) {
     query = query.eq('category_id', options.category_id)
@@ -477,7 +477,14 @@ export async function getActiveProducts(
     if (term) query = query.ilike('name', `%${term}%`)
   }
 
-  const { data, count } = await query.range(from, to)
+  // Default sort: newest first (created_at desc).
+  const sort = options?.sort
+  const orderColumn = sort === 'price_desc' || sort === 'price_asc' ? 'price' : 'created_at'
+  const ascending = sort === 'oldest' || sort === 'price_asc'
+
+  const { data, count } = await query
+    .order(orderColumn, { ascending })
+    .range(from, to)
 
   return {
     products: (data ?? []) as (Product & { images: ProductImage[] })[],
