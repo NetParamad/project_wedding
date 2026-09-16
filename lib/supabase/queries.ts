@@ -479,7 +479,7 @@ export async function getActiveProducts(
 
   // Default sort: newest first (created_at desc).
   const sort = options?.sort
-  const orderColumn = sort === 'price_desc' || sort === 'price_asc' ? 'price' : 'created_at'
+  const orderColumn = sort === 'price_desc' || sort === 'price_asc' ? 'rental_price' : 'created_at'
   const ascending = sort === 'oldest' || sort === 'price_asc'
 
   const { data, count } = await query
