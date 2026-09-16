@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getRandomProducts, getCategories } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Marquee } from "@/components/marquee";
 
 
@@ -170,22 +170,18 @@ export default async function HomePage() {
           <div className="text-center space-y-2">
             <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">ความประทับใจจากคู่บ่าวสาว</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {testimonialImages.map((img, i) => (
-              <Card key={i} className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="aspect-square overflow-hidden bg-muted">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={img}
-                      alt=""
-                      className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+          <Marquee>
+            {[...testimonialImages, ...testimonialImages].map((img, i) => (
+              <div key={i} className="shrink-0 w-[280px] sm:w-[320px] overflow-hidden rounded-lg shadow-sm bg-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={img}
+                  alt=""
+                  className="h-full w-full object-cover aspect-square hover:scale-105 transition-transform duration-500"
+                />
+              </div>
             ))}
-          </div>
+          </Marquee>
         </div>
       </section>
 

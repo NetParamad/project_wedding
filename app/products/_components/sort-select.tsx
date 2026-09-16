@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 const SORT_OPTIONS = [
   { value: '', label: 'ล่าสุด' },
-  { value: 'oldest', label: 'นานสุด' },
+  { value: 'oldest', label: 'แรกสุด' },
   { value: 'price_desc', label: 'ราคาสูงสุด' },
   { value: 'price_asc', label: 'ราคาต่ำสุด' },
 ] as const
