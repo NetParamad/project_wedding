@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getFeaturedProducts, getCategories } from "@/lib/supabase/queries";
+import { getRandomProducts, getCategories } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/marquee";
 
 
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const [featured, categories] = await Promise.all([
-    getFeaturedProducts(supabase),
+  const [latest, categories] = await Promise.all([
+    getRandomProducts(supabase),
     getCategories(supabase),
   ]);
 
@@ -19,6 +19,36 @@ export default async function HomePage() {
     '/services/wd_sv_1.jpg',
     '/services/wd_sv_2.jpg',
     '/services/wd_sv_3.jpg',
+  ];
+
+  const testimonialImages = [
+    '/review/Screenshot_20260804_175425_Instagram.jpg',
+    '/review/Screenshot_20260804_175445_Instagram.jpg',
+    '/review/Screenshot_20260804_175525_Instagram.jpg',
+    '/review/Screenshot_20260804_175552_Instagram.jpg',
+    '/review/Screenshot_20260804_175634_Instagram.jpg',
+    '/review/Screenshot_20260804_175656_Instagram.jpg',
+    '/review/Screenshot_20260804_175740_Instagram.jpg',
+    '/review/Screenshot_20260804_175800_Instagram.jpg',
+    '/review/Screenshot_20260804_175817_Instagram.jpg',
+    '/review/Screenshot_20260804_175839_Instagram.jpg',
+    '/review/Screenshot_20260804_175910_Instagram.jpg',
+    '/review/Screenshot_20260804_175944_Instagram.jpg',
+    '/review/Screenshot_20260804_180026_Instagram.jpg',
+    '/review/Screenshot_20260804_180102_Instagram.jpg',
+    '/review/Screenshot_20260804_180124_Instagram.jpg',
+    '/review/Screenshot_20260804_180206_Instagram.jpg',
+    '/review/Screenshot_20260804_180220_Instagram.jpg',
+    '/review/Screenshot_20260804_180242_Instagram.jpg',
+    '/review/Screenshot_20260804_180324_Instagram.jpg',
+    '/review/Screenshot_20260804_180345_Instagram.jpg',
+    '/review/Screenshot_20260804_180503_Instagram.jpg',
+    '/review/Screenshot_20260804_180656_Instagram.jpg',
+    '/review/Screenshot_20260804_180827_Instagram.jpg',
+    '/review/Screenshot_20260804_180926_Instagram.jpg',
+    '/review/Screenshot_20260804_181110_Instagram.jpg',
+    '/review/Screenshot_20260804_181707_Instagram.jpg',
+    '/review/Screenshot_20260804_181845_Instagram.jpg',
   ];
 
 
@@ -43,7 +73,7 @@ export default async function HomePage() {
           <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-tight text-balance">
             ร้อยเรียงความฝันในวันวิวาห์ ด้วยเสน่ห์ผืนผ้าทางล้านนา
           </h1>
-          <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
+          <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
             ถักทอความรัก ความผูกพันผ่านเส้นสายผืนผ้าพร้อมเครื่องศิราภรณ์อันเลอค่า ให้คอลเลกชันชุดล้านนาทรงเสน่ห์ ชุดไทยสุดสง่า และชุดราตรีร่วมสมัย พาเนรมิตช่วงเวลาแห่งความสุข โอบล้อมคู่บ่าวสาวด้วยความงดงามดั่งบทกวีที่ไม่เคยลบเลือน
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -98,7 +128,7 @@ export default async function HomePage() {
                       />
                     </div>
                     <div className="p-3 text-center space-y-1">
-                      <p className="font-medium text-sm">{cat.name}</p>
+                      <p className="font-medium text-lg">{cat.name}</p>
                       {cat.description && (
                         <p className="text-xs text-muted-foreground leading-relaxed">{cat.description}</p>
                       )}
@@ -117,19 +147,44 @@ export default async function HomePage() {
           <div className="text-center space-y-2">
             <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">เลือกชมสินค้า</p>
           </div>
-          {featured.length > 0 ? (
+          {latest.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featured.map((product) => (
+              {latest.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">ยังไม่มีสินค้าแนะนำ</p>
+            <p className="text-muted-foreground">ยังไม่มีสินค้า</p>
           )}
           <div className="text-center">
             <Button asChild variant="outline" size="lg">
               <Link href="/products">ดูทั้งหมด</Link>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 lg:py-24 bg-muted/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="text-center space-y-2">
+            <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">ความประทับใจจากคู่บ่าวสาว</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {testimonialImages.map((img, i) => (
+              <Card key={i} className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="aspect-square overflow-hidden bg-muted">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img}
+                      alt=""
+                      className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

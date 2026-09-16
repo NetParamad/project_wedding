@@ -530,6 +530,26 @@ export async function getFeaturedProducts(
   return (data ?? []) as (Product & { images: ProductImage[] })[]
 }
 
+export async function getRandomProducts(
+  client: SupabaseClient,
+  limit = 6
+) {
+  const { data } = await client
+    .from('products')
+    .select('*, images:product_images(*)')
+    .eq('is_active', true)
+
+  const products = (data ?? []) as (Product & { images: ProductImage[] })[]
+
+  // Fisher-Yates shuffle
+  for (let i = products.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[products[i], products[j]] = [products[j], products[i]]
+  }
+
+  return products.slice(0, limit)
+}
+
 export async function updateStoreSettings(
   client: SupabaseClient,
   input: {
