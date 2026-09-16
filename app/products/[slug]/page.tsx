@@ -6,6 +6,7 @@ import { ProductGallery } from './product-gallery'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ChevronLeft } from 'lucide-react'
+import { Reveal } from '@/components/animations'
 
 export default async function ProductDetailPage({
   params,
@@ -32,55 +33,65 @@ export default async function ProductDetailPage({
       </Link>
 
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {images.length > 0 ? (
-          <ProductGallery images={images} productName={productName} />
-        ) : (
-          <Card>
-            <CardContent className="aspect-square p-0 flex items-center justify-center text-muted-foreground bg-muted rounded-lg">
-            ไม่มีรูป
-          </CardContent></Card>
-        )}
+        <Reveal>
+          {images.length > 0 ? (
+            <ProductGallery images={images} productName={productName} />
+          ) : (
+            <Card>
+              <CardContent className="aspect-square p-0 flex items-center justify-center text-muted-foreground bg-muted rounded-lg">
+              ไม่มีรูป
+            </CardContent></Card>
+          )}
+        </Reveal>
 
         <div className="space-y-6">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">{productName}</h1>
-          </div>
+          <Reveal>
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold">{productName}</h1>
+            </div>
+          </Reveal>
 
           {product.description && (
-            <div className="space-y-2">
-              <h3 className="font-medium">รายละเอียด</h3>
-              <p className="text-sm text-muted-foreground whitespace-pre-line">
-                {product.description}
-              </p>
-            </div>
+            <Reveal delay={0.1}>
+              <div className="space-y-2">
+                <h3 className="font-medium">รายละเอียด</h3>
+                <p className="text-sm text-muted-foreground whitespace-pre-line">
+                  {product.description}
+                </p>
+              </div>
+            </Reveal>
           )}
 
-          <Card className="border-blue-200 bg-blue-50">
-            <CardContent className="p-4 space-y-2">
-              <h3 className="font-semibold text-blue-800 flex items-center gap-2">
-                บริการเช่าชุด
-              </h3>
-              <div className="text-sm text-blue-700 space-y-1">
-                <p>ราคาเช่า: ฿{Number(product.rental_price).toLocaleString()} / วัน</p>
-                {Number(product.rental_deposit) > 0 && (
-                  <p>ค่าประกัน: ฿{Number(product.rental_deposit).toLocaleString()}</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <Reveal delay={0.15}>
+            <Card className="border-blue-200 bg-blue-50">
+              <CardContent className="p-4 space-y-2">
+                <h3 className="font-semibold text-blue-800 flex items-center gap-2">
+                  บริการเช่าชุด
+                </h3>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <p>ราคาเช่า: ฿{Number(product.rental_price).toLocaleString()} / วัน</p>
+                  {Number(product.rental_deposit) > 0 && (
+                    <p>ค่าประกัน: ฿{Number(product.rental_deposit).toLocaleString()}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </Reveal>
 
-          <div className="space-y-2">
-            <Button asChild variant="outline" className="w-full">
-              <Link href={`/appointments/book?product=${product.slug}`}>
-                นัดลองชุด
-              </Link>
-            </Button>
-            <Button asChild variant="default" className="w-full">
-              <Link href={`/rentals/new?product=${product.slug}`}>
-                เช่าชุด
-              </Link>
-            </Button>
-          </div>
+          <Reveal delay={0.2}>
+            <div className="space-y-2">
+              <Button asChild variant="outline" className="w-full">
+                <Link href={`/appointments/book?product=${product.slug}`}>
+                  นัดลองชุด
+                </Link>
+              </Button>
+              <Button asChild variant="default" className="w-full">
+                <Link href={`/rentals/new?product=${product.slug}`}>
+                  เช่าชุด
+                </Link>
+              </Button>
+            </div>
+          </Reveal>
 
         </div>
       </div>
