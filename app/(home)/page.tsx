@@ -117,18 +117,18 @@ export default async function HomePage() {
       {categories.length > 0 && (
         <section className="py-16 lg:py-24 bg-muted/60">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            <Reveal className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold">หมวดหมู่</h2>
+            <Reveal className="flex items-center justify-between border-b-2 border-foreground/10 pb-4">
+              <h2 className="text-3xl font-bold leading-tight">หมวดหมู่</h2>
               <Link href="/products" className="text-sm text-primary hover:underline">
                 ดูทั้งหมด
               </Link>
             </Reveal>
-            <RevealGroup className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <RevealGroup className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {categories.map((cat) => (
                 <div key={cat.id} data-reveal-item>
                   <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
                     <Link href={`/products?category=${cat.id}`}>
-                      <div className="aspect-[3/2] bg-muted overflow-hidden">
+                      <div className="aspect-square bg-muted overflow-hidden">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={cat.image_url || `https://picsum.photos/seed/category-${cat.id}/400/300`}
