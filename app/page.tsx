@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getFeaturedProducts, getCategories } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Marquee } from "@/components/marquee";
 
 
@@ -31,38 +31,6 @@ export default async function HomePage() {
     '/gallery/wd_gal_6.jpg',
   ]
 
-  const testimonialImages = [
-    '/review/Screenshot_20260804_175425_Instagram.jpg',
-    '/review/Screenshot_20260804_175445_Instagram.jpg',
-    '/review/Screenshot_20260804_175525_Instagram.jpg',
-    '/review/Screenshot_20260804_175552_Instagram.jpg',
-    '/review/Screenshot_20260804_175634_Instagram.jpg',
-    '/review/Screenshot_20260804_175656_Instagram.jpg',
-    '/review/Screenshot_20260804_175740_Instagram.jpg',
-    '/review/Screenshot_20260804_175800_Instagram.jpg',
-    '/review/Screenshot_20260804_175817_Instagram.jpg',
-    '/review/Screenshot_20260804_175839_Instagram.jpg',
-    '/review/Screenshot_20260804_175910_Instagram.jpg',
-    '/review/Screenshot_20260804_175944_Instagram.jpg',
-    '/review/Screenshot_20260804_180026_Instagram.jpg',
-    '/review/Screenshot_20260804_180102_Instagram.jpg',
-    '/review/Screenshot_20260804_180124_Instagram.jpg',
-    '/review/Screenshot_20260804_180206_Instagram.jpg',
-    '/review/Screenshot_20260804_180220_Instagram.jpg',
-    '/review/Screenshot_20260804_180242_Instagram.jpg',
-    '/review/Screenshot_20260804_180324_Instagram.jpg',
-    '/review/Screenshot_20260804_180345_Instagram.jpg',
-    '/review/Screenshot_20260804_180503_Instagram.jpg',
-    '/review/Screenshot_20260804_180656_Instagram.jpg',
-    '/review/Screenshot_20260804_180730_Instagram.jpg',
-    '/review/Screenshot_20260804_180827_Instagram.jpg',
-    '/review/Screenshot_20260804_180926_Instagram.jpg',
-    '/review/Screenshot_20260804_181110_Instagram.jpg',
-    '/review/Screenshot_20260804_181652_Instagram.jpg',
-    '/review/Screenshot_20260804_181707_Instagram.jpg',
-    '/review/Screenshot_20260804_181845_Instagram.jpg',
-  ];
-
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -72,7 +40,7 @@ export default async function HomePage() {
           <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">
             สัมผัสความงามอันอ่อนช้อย ด้วยเสน่ห์กลิ่นอายล้านนา
           </p>
-          <h1 className="text-6xl lg:text-8xl font-bold tracking-tight leading-tight text-balance">
+          <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-tight text-balance">
             ร้อยเรียงความฝันในวันวิวาห์ ด้วยเสน่ห์ผืนผ้าทางล้านนา
           </h1>
           <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
@@ -112,7 +80,7 @@ export default async function HomePage() {
         <section className="py-16 lg:py-24 bg-muted/60">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">หมวดหมู่</h2>
+              <h2 className="text-3xl font-bold">หมวดหมู่</h2>
               <Link href="/products" className="text-sm text-primary hover:underline">
                 ดูทั้งหมด
               </Link>
@@ -163,29 +131,6 @@ export default async function HomePage() {
               <Link href="/products">ดูทั้งหมด</Link>
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 lg:py-24 bg-muted/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center space-y-2">
-            <p className="text-primary font-medium tracking-[0.1em] uppercase text-lg">ความประทับใจจากคู่บ่าวสาว</p>
-          </div>
-          <Marquee>
-            {[...testimonialImages, ...testimonialImages].map((img, idx) => (
-              <Card key={idx} className="shrink-0 w-[220px] sm:w-[260px] border-0 shadow-sm overflow-hidden bg-card p-0">
-                <CardContent className="p-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={img}
-                    alt="รีวิวความประทับใจจากคู่บ่าวสาว"
-                    className="h-[420px] w-full object-cover object-top"
-                  />
-                </CardContent>
-              </Card>
-            ))}
-          </Marquee>
         </div>
       </section>
 

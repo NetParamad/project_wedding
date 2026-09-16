@@ -65,6 +65,24 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Thai has no spaces between words — let the engine pick the prettiest
+     break points so lines never cut words awkwardly on the project. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd,
+  dt,
+  figcaption,
+  blockquote,
+  th,
+  td {
+    text-wrap: pretty;
+  }
 }
 
 /* ─── Color Themes ─── */
